@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.params=center\ radius\ color
+comment0.target=Player(java.awt.geom.Point2D.Double,\ double,\ java.awt.Color)
+comment1.params=
+comment1.target=void\ calcMove()
+comment2.params=
+comment2.target=void\ jump()
+comment3.params=g2\ filled
+comment3.target=void\ draw(java.awt.Graphics2D,\ boolean)
+comment4.params=x\ y
+comment4.target=void\ move(double,\ double)
+comment5.params=x\ y
+comment5.target=void\ goTo(double,\ double)
+comment6.params=point
+comment6.target=boolean\ isInside(java.awt.geom.Point2D.Double)
+comment7.params=direction
+comment7.target=void\ moveX(int)
+numComments=8

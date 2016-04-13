@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.params=center\ radius\ color
+comment0.target=Shape(java.awt.geom.Point2D.Double,\ double,\ java.awt.Color)
+comment1.params=
+comment1.target=java.awt.geom.Point2D.Double\ getCenter()
+comment2.params=
+comment2.target=double\ getRadius()
+comment3.params=
+comment3.target=double\ getHeight()
+comment4.params=x\ y
+comment4.target=void\ move(double,\ double)
+comment5.params=x\ y
+comment5.target=void\ goTo(double,\ double)
+comment6.params=r
+comment6.target=void\ setRadius(double)
+comment7.params=point
+comment7.target=boolean\ isInside(java.awt.geom.Point2D.Double)
+comment8.params=point
+comment8.target=boolean\ isOnBorder(java.awt.geom.Point2D.Double)
+comment9.params=g2\ filled
+comment9.target=void\ draw(java.awt.Graphics2D,\ boolean)
+numComments=10
