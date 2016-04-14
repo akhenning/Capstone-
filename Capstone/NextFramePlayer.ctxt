@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.params=center\ radius
+comment0.target=NextFramePlayer(java.awt.geom.Point2D.Double,\ double)
+comment0.text=\r\n\ Default\ constructor\ for\ objects\ of\ class\ NextFramePlayer\r\n
+comment1.params=on\ center\ upV\ xV
+comment1.target=boolean\ isOnTopOfNext(Shape,\ java.awt.geom.Point2D.Double,\ int,\ int)
+numComments=2

@@ -16,7 +16,7 @@ import java.awt.geom.Point2D;
 public class DrawingPanel extends JPanel
 {
     ArrayList<Shape> everything;
-    Player player=new Player(new Point2D.Double(20,20),10,Color.BLACK);
+    Player player=new Player(new Point2D.Double(20,20),20,Color.BLACK);
     Color current;    
     boolean isShift=false;
     boolean isLeft=false;
@@ -31,7 +31,7 @@ public class DrawingPanel extends JPanel
         //addMouseMotionListener(new MovementListener());
         setFocusable(true);
         addKeyListener(new KeysListener());
-        everything.add(new SquareObj(new Point2D.Double(412,800),400,Color.GRAY));
+        everything.add(new SquareObj(new Point2D.Double(400,800),400,Color.GREEN));
     }
     
     public Color getColor()
@@ -44,19 +44,7 @@ public class DrawingPanel extends JPanel
         Dimension d=new Dimension(350,300);
         return d;
     }
-    
-    public void pickColor()
-    {
-        current=JColorChooser.showDialog(this, "Choose background color", Color.black);
-
-    }
-
-    //public void addCircle()
-    //{           
-    //    shapes.add(new Circle(new Point2D.Double(100,100),15,current));
-    //    repaint();
-    //}
-    
+   
     //public void addSquare()
     //{
     //    shapes.add(new Square(new Point2D.Double(100,100),15,current));
@@ -68,22 +56,21 @@ public class DrawingPanel extends JPanel
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         player.draw(g2,true);
-        //for (Shape shape:shapes)
-        //{
-            //if (!shape.equals(lastActiveShape))
-            //{
-        //        shape.draw(g2,true);
-            //}
-        //}
-        //if (lastActiveShape!=null)
-        //{
-        //    lastActiveShape.draw(g2,false);
-        //}
-        
+        for (Shape shape:everything)
+        {            
+            shape.draw(g2,true);
+        }
         // System.out.println(current);
     }
     public void nextFrame()
     {
+        
+        for (Shape shape:everything)
+        {            
+            boolean b=player.isOnTopOfNextFrame(shape);
+            System.out.println(b+"   "+player.isOnTopOf(shape));
+            player.whenTouchingGround(b);
+        }
         player.calcMove();
         if (isLeft)
         {
@@ -93,7 +80,6 @@ public class DrawingPanel extends JPanel
         {
             player.moveX(1);
         }
-            
         repaint();
         requestFocusInWindow();
     }
