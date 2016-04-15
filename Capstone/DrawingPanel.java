@@ -16,11 +16,12 @@ import java.awt.geom.Point2D;
 public class DrawingPanel extends JPanel
 {
     ArrayList<Shape> everything;
-    Player player=new Player(new Point2D.Double(20,20),20,Color.BLACK);
+    Player player=new Player(new Point2D.Double(20,20),30,Color.BLACK);
     Color current;    
     boolean isShift=false;
     boolean isLeft=false;
     boolean isRight=false;
+    boolean isJumping=false;
         
     public DrawingPanel()
     {        
@@ -32,6 +33,7 @@ public class DrawingPanel extends JPanel
         setFocusable(true);
         addKeyListener(new KeysListener());
         everything.add(new SquareObj(new Point2D.Double(400,800),400,Color.GREEN));
+        everything.add(new SquareObj(new Point2D.Double(400,250),50,Color.GREEN));
     }
     
     public Color getColor()
@@ -67,18 +69,23 @@ public class DrawingPanel extends JPanel
         
         for (Shape shape:everything)
         {            
+            if(player.isHitNextFrame(shape))
+            {
+                player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getRadius());
+              
+            }
             boolean b=player.isOnTopOfNextFrame(shape);
-            System.out.println(b+"   "+player.isOnTopOf(shape));
-            player.whenTouchingGround(b);
+            int top=(int)(shape.getCenter().getY()-shape.getRadius());
+            player.whenTouchingGround(b,top);
         }
-        player.calcMove();
+        player.calcMove(isJumping);
         if (isLeft)
         {
-            player.moveX(-1);
+            player.moveX(-1,isShift);
         }
         if (isRight)
         {
-            player.moveX(1);
+            player.moveX(1,isShift);
         }
         repaint();
         requestFocusInWindow();
@@ -133,6 +140,7 @@ public class DrawingPanel extends JPanel
             if (e.getKeyCode()==KeyEvent.VK_SPACE)
             {
                 player.jump();
+                isJumping=true;
             }
             else if (e.getKeyCode()==16)
             {
@@ -162,7 +170,11 @@ public class DrawingPanel extends JPanel
             else if (e.getKeyCode()==KeyEvent.VK_D)
             {
                  isRight=false;
-            }           
+            }          
+            else if (e.getKeyCode()==KeyEvent.VK_SPACE)
+            {
+                isJumping=false;
+            }
         }
         public void keyTyped(KeyEvent e)
         {}
