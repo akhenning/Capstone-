@@ -3,7 +3,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-
+import java.awt.geom.Ellipse2D;
 
 class Player
 {
@@ -11,7 +11,7 @@ class Player
     double radius;
     Rectangle rect;
     Color color;
-    int upVelocity=0;
+    double upVelocity=0;
     double xVelocity=0;
     Player inactive;
     boolean touching=false;
@@ -25,44 +25,70 @@ class Player
     public void calcMove(boolean space)
     {
         
-        if (center.getX()<0||center.getX()>840)
+        if (center.getX()<0)//||center.getX()>840)
         {
             xVelocity*=-1;
             if(center.getX()<-20)
             {   
                 goTo(20, center.getY());
             }
-            if(center.getX()>860)
-            {   
-                goTo(820, center.getY());
-            }
+            //if(center.getX()>860)
+            //{   
+            //    goTo(820, center.getY());
+            //}
         }
         move(xVelocity,-1*upVelocity);
         if (upVelocity<-2||space)
         {
-            upVelocity--;
-            if (upVelocity<-20)
-            {
-                upVelocity=-20;
-            }
+            upVelocity-=.25;            
         }
         else
         {                  
-            upVelocity-=3;        
+            upVelocity-=.75;        
         }
         
-        xVelocity*=.9;
+        xVelocity*=.95;
         
-        
+        //System.out.println(center);
     }
+    
+    public void moveX(double direction,boolean shift)
+    {
+        xVelocity+=direction/4;
+        if (shift)
+        {
+            xVelocity+=direction/8;
+        }
+        
+        if (xVelocity>35||xVelocity<-35)
+        {            
+            xVelocity*=9;
+            xVelocity/=10;
+        }
+        else if ((xVelocity>25||xVelocity<-25)&&!shift)
+        {
+            xVelocity*=9;
+            xVelocity/=10;
+        }
+       
+    }
+    
     public void jump()
     {
         if(touching)
         {
-            upVelocity=20;
+            if (xVelocity>20)
+            {
+                upVelocity=22+Math.abs(xVelocity%20/4);
+            }
+            else
+            {
+                upVelocity=12+Math.abs(xVelocity/2);
+            }
         }
         touching=false;
     }
+    
     public void whenTouchingGround(boolean touching, int groundHeight)
     {       
        
@@ -74,23 +100,63 @@ class Player
             // System.out.println("Made it here  "+groundHeight);         
         }
     }
-    void draw(Graphics2D g2, boolean filled)
+    
+    void draw(Graphics2D g2)
     {        
         rect=new Rectangle((int)(center.getX()-radius),(int)(center.getY()-radius),(int)radius*2,(int)radius*2);
         //System.out.println(center);
-        g2.setColor(color);
-        if (filled)
-        {            
-            g2.fill(rect);
+        
+        Rectangle rect2;
+        Rectangle rect3;
+        if(touching)
+        {
+            Rectangle rect6=new Rectangle((int)(center.getX()-(radius/2)),(int)(center.getY()+(radius/2)),(int)radius*2/3,(int)radius/4);
+            g2.fill(rect6);
+            rect2=new Rectangle((int)(center.getX()-(radius*2/3)),(int)(center.getY()-(radius/2)),(int)radius/2,(int)radius/2);
+            rect3=new Rectangle((int)(center.getX()+(radius/3)),(int)(center.getY()-(radius/2)),(int)radius/2,(int)radius/2);
         }
         else
         {
-            g2.draw(rect);
+            Ellipse2D.Double rect6=new Ellipse2D.Double((int)(center.getX()-(radius*2/3)),(int)(center.getY()+(radius/4)),(int)radius,(int)radius/2);
+            g2.fill(rect6);
+            rect2=new Rectangle((int)(center.getX()-(radius*3/4)),(int)(center.getY()-(radius*3/5)),(int)radius*3/5,(int)radius*3/5);
+            rect3=new Rectangle((int)(center.getX()+(radius/4)),(int)(center.getY()-(radius*3/5)),(int)radius*3/5,(int)radius*3/5);
         }
+        g2.setColor(color);                 
+        g2.fill(rect);
+        g2.setColor(Color.WHITE);  
+        g2.fill(rect2);
+        g2.fill(rect3);
+        Rectangle rect4=new Rectangle((int)(center.getX()-(radius*2/3)),(int)(center.getY()-(radius/2)),(int)radius/4,(int)radius/4);
+        Rectangle rect5=new Rectangle((int)(center.getX()+(radius/3)),(int)(center.getY()-(radius/2)),(int)radius/4,(int)radius/4);
+        g2.setColor(Color.BLACK);                 
+        g2.fill(rect4);
+        g2.fill(rect5);
+        if(touching)
+        {
+            Rectangle rect6=new Rectangle((int)(center.getX()-(radius/2)),(int)(center.getY()+(radius/2)),(int)radius*2/3,(int)radius/4);
+            g2.fill(rect6);
+        }
+        else
+        {
+            Ellipse2D.Double rect6=new Ellipse2D.Double((int)(center.getX()-(radius*2/3)),(int)(center.getY()+(radius/4)),(int)radius,(int)radius/2);
+            g2.fill(rect6);
+        }
+        
     }
     public void setSpeed(int speed)
     {
         upVelocity=speed;
+    }
+    
+    public void setRadius(double newR)
+    {
+        radius=newR;
+    }
+    
+    public double getRadius()
+    {
+        return radius;
     }
     
     public void move(double x, double y)
@@ -107,59 +173,49 @@ class Player
     {
         return (Math.abs(center.getX()-point.getX())<radius)&&(Math.abs(center.getY()-point.getY())<radius);
     }
-    public boolean isOnTopOf(Shape on)
-    {
-        return (on.isInside(new Point2D.Double(center.getX()+radius,center.getY()+radius)))||(on.isInside(new Point2D.Double(center.getX()-radius,center.getY()+radius)));
-    }
+    
+//     public boolean isOnTopOf(Shape on)
+//     {
+//         return (on.isInside(new Point2D.Double(center.getX()+radius,center.getY()+radius)))||(on.isInside(new Point2D.Double(center.getX()-radius,center.getY()+radius)));
+//     }
+    
     public boolean isOnTopOfNextFrame(Shape on)
     {
-        NextFramePlayer next=new NextFramePlayer(center,radius);
-        return next.isOnTopOfNext(on,center,upVelocity,xVelocity);
+        Point2D.Double center2=new Point2D.Double(center.getX()+xVelocity,center.getY()-upVelocity);        
+        return(upVelocity<0)&&((on.isInside(new Point2D.Double(center2.getX()+radius,center2.getY()+radius)))||(on.isInside(new Point2D.Double(center2.getX()-radius,center2.getY()+radius))));
         
     }
+    
     public boolean isHitNextFrame(Shape on)
     {
-        NextFramePlayer next=new NextFramePlayer(center,radius);
-        return next.isHitNext(on,center,upVelocity,xVelocity);
+        Point2D.Double center2=new Point2D.Double(center.getX()+xVelocity,center.getY()-upVelocity);        
+        return (on.isInside(new Point2D.Double(center2.getX()+radius+1,center2.getY()+(radius*3/4))))||(on.isInside(new Point2D.Double(center2.getX()-radius-1,center2.getY()+(radius*.75))))||(on.isInside(new Point2D.Double(center2.getX()-radius-1,center2.getY()-radius)))||(on.isInside(new Point2D.Double(center2.getX()+radius+1,center2.getY()-radius)));
         
     }
 
-    public void moveX(int direction,boolean shift)
-    {
-        xVelocity+=direction;
-        if (shift)
-        {
-            xVelocity+=direction/2;
-        }
-        if (xVelocity>25||xVelocity<-25)
-        {
-            xVelocity*=9;
-            xVelocity/=10;
-        }
-          
-    }
     
-    public void hitWall(double objX, double objY, double xLength)
+    
+    public void hitWall(double objX, double objY, double xLength,double yLength)
     {
-             System.out.println("Checking for hits.");
         if(objX-xLength>center.getX())
         {
-            System.out.println("Hit, Left");
+            
             goTo(objX-xLength-radius,center.getY());
-            xVelocity=0;
+            xVelocity=-.25;
         }
         else if (objX+xLength<center.getX())
         {
-            System.out.println("Hit, Right");
+            
             goTo(objX+xLength+radius,center.getY());
-            xVelocity=0;
+            xVelocity=.25;
         }
-        //else//if (objY+xLength<center.getY())
-        //{
-        //    System.out.println("Hit, Below");
-        //    goTo(center.getX(),objY+xLength+radius);
-        //    upVelocity=0;
-        //}   
+        else if (objY+xLength<center.getY())
+        {
+            
+            goTo(center.getX(),objY+yLength+radius);
+            upVelocity=0;
+        }   
     }
+    
 }
 

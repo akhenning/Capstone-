@@ -9,4 +9,6 @@ comment3.params=g
 comment3.target=void\ paintComponent(java.awt.Graphics)
 comment4.params=
 comment4.target=void\ nextFrame()
-numComments=5
+comment5.params=
+comment5.target=void\ lol()
+numComments=6

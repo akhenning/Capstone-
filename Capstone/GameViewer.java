@@ -22,7 +22,7 @@ public class GameViewer
         // create and configure the frame (window) for the program
         JFrame frame = new JFrame();
         
-        frame.setSize(825, 650);
+        frame.setSize(1200, 800);
         frame.setTitle("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
               
@@ -37,7 +37,7 @@ public class GameViewer
         for( int seconds = 0; seconds < ANIMATION_TIME_IN_SECONDS; seconds=1 )
         {
             canvas.nextFrame();
-            Thread.sleep( (long)15 );
+            Thread.sleep( (long)10 );
         }
         
     }

@@ -19,7 +19,11 @@ public abstract class Shape
         return center;
     }
     
-    double getRadius()
+    double getX()
+    {
+        return radius;
+    }
+    double getY()
     {
         return radius;
     }
