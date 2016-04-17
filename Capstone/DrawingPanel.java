@@ -15,8 +15,9 @@ import java.awt.geom.Point2D;
 
 public class DrawingPanel extends JPanel
 {
-    ArrayList<Shape> everything;
-    Player player=new Player(new Point2D.Double(20,20),30,Color.GREEN);
+    ArrayList<Shape> groundBlocks;
+    ArrayList<Enemy> enemies;
+    Player player=new Player(new Point2D.Double(100,100),30,Color.GREEN);
     Color current;    
     boolean isShift=false;
     boolean isLeft=false;
@@ -26,16 +27,24 @@ public class DrawingPanel extends JPanel
         
     public DrawingPanel()
     {        
-        everything=new ArrayList<Shape>();
+        groundBlocks=new ArrayList<Shape>();
+        enemies=new ArrayList<Enemy>();
         setBackground(Color.WHITE);       
         current=new Color(0,0,0);
         addMouseListener(new ClickListener());
         //addMouseMotionListener(new MovementListener());
         setFocusable(true);
         addKeyListener(new KeysListener());
-        everything.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
-        everything.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
-        everything.add(new SquareObj(new Point2D.Double(500,350),50,Color.RED));
+        groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
+        groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
+        groundBlocks.add(new SquareObj(new Point2D.Double(500,350),50,Color.RED));
+        groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
+        groundBlocks.add(new SquareObj(new Point2D.Double(1500,500),50,Color.RED));
+        groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
+        groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
+        //System.out.println(groundBlocks.get(2));
+        enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(6),50,player));
+        enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,player));
     }
     
     public Color getColor()
@@ -60,26 +69,74 @@ public class DrawingPanel extends JPanel
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         player.draw(g2);
-        for (Shape shape:everything)
+        for (Shape shape:groundBlocks)
         {            
-            shape.draw(g2,true);
+            double position=shape.getStaticX()-player.getScrollX();
+            if (position+shape.getXL()>-20&&position-shape.getXL()<1220)
+            {
+                shape.goToX(position);
+                shape.draw(g2);
+            }
+            else
+            {
+                shape.goToX(-999);
+            }
+        }
+        
+        for (Enemy enemy:enemies)
+        {            
+            if(enemy.isAlive())
+            {
+                if(enemy.getMate().getCenter().getX()!=-999)
+                {
+                    enemy.calcXY();
+                    enemy.draw(g2);
+                
+                }
+                else
+                {
+                    enemy.goToX(-999);
+                }
+            }
         }
         // System.out.println(current);
     }
     public void nextFrame()
     {
         
-        for (Shape shape:everything)
+        for (Shape shape:groundBlocks)
         {            
             if(player.isHitNextFrame(shape))
             {
-                player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getX(),shape.getY());
+                player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getXL(),shape.getYL());
               
             }
             boolean b=player.isOnTopOfNextFrame(shape);
-            int top=(int)(shape.getCenter().getY()-shape.getY());
+            int top=(int)(shape.getCenter().getY()-shape.getYL());
             player.whenTouchingGround(b,top);
         }
+        
+        for (Enemy enemy:enemies)
+        {            
+            
+            if(enemy.isAlive())
+            {
+                boolean b=player.isOnTopOfNextFrame(enemy);        
+                if (b)
+                {
+                    player.bounce();
+                    System.out.println("Jumped on");
+                    enemy.getHit();
+                }
+                else if(player.isHitNextFrame(enemy))
+                {
+                    player.takeDamage();
+                    System.out.println("Hurt");
+                    
+                }
+            }            
+        }
+        
         player.calcMove(isJumping);
         if (isLeft)
         {
@@ -152,7 +209,7 @@ public class DrawingPanel extends JPanel
             {
                  isRight=true;
             }            
-            repaint();
+            //repaint();
             requestFocusInWindow();           
         }
         public void keyReleased(KeyEvent e)

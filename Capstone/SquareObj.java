@@ -14,18 +14,13 @@ class SquareObj extends Shape
         this.color=color;
         rect=new Rectangle((int)(center.getX()-radius),(int)(center.getY()-radius),(int)radius*2,(int)radius*2);
     }
-    void draw(Graphics2D g2, boolean filled)
+    void draw(Graphics2D g2)
     {
         rect=new Rectangle((int)(getCenter().getX()-radius),(int)(getCenter().getY()-radius),(int)radius*2,(int)radius*2);
         g2.setColor(color);
-        if (filled)
-        {            
-            g2.fill(rect);
-        }
-        else
-        {
-            g2.draw(rect);
-        }
+                
+        g2.fill(rect);
+       
     }
     
     boolean isInside(Point2D.Double point)

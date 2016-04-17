@@ -7,9 +7,11 @@ public abstract class Shape
     Point2D.Double center;
     double radius;
     Color color;
+    final double STATIC_X;
     public Shape(Point2D.Double center, double radius, Color color)
     {
         this.center=center;
+        STATIC_X=center.getX();
         this.radius=radius;
         this.color=color;
     }
@@ -19,13 +21,17 @@ public abstract class Shape
         return center;
     }
     
-    double getX()
+    double getXL()
     {
         return radius;
     }
-    double getY()
+    double getYL()
     {
         return radius;
+    }
+    double getStaticX()
+    {
+        return STATIC_X;
     }
     
     double getHeight()
@@ -43,12 +49,17 @@ public abstract class Shape
         center=new Point2D.Double(x,y);
     }
     
+    void goToX(double x)
+    {
+        center=new Point2D.Double(x,center.getY());
+    }
+    
     void setRadius(double r)
     {
         radius=r;
     }
     
     abstract boolean isInside(Point2D.Double point);
-    abstract boolean isOnBorder(Point2D.Double point);
-    abstract void draw(Graphics2D g2,boolean filled); 
+    //abstract boolean isOnBorder(Point2D.Double point);
+    abstract void draw(Graphics2D g2); 
 }
