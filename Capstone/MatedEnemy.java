@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 
-class MatedEnemy extends Enemy
+class MatedEnemy extends Entity
 {
     boolean alive=true;
     Rectangle rect;
@@ -13,19 +13,18 @@ class MatedEnemy extends Enemy
     double x;
     double roam=1;
     double roamC=-.01;
-    Player thePlayer;
-    public MatedEnemy(Color color, Shape matedShape, double r, Player player)
+    public MatedEnemy(Color color, Shape matedShape, double r)
     {
         super(color,r);
         this.matedShape=matedShape;
-        this.color=color;        
-        thePlayer=player;
+        this.color=color;    
+       
     }
     public void calcXY()
     {
         setY(matedShape.getCenter().getY()-matedShape.getYL()-getRadius());
         setX(matedShape.getCenter().getX()+(matedShape.getXL()*roam));
-        x=matedShape.getStaticX()-thePlayer.getScrollX()+(matedShape.getXL()*roam);
+        x=matedShape.getStaticX()-Player.scrollX+(matedShape.getXL()*roam);
         if (roam<-1)
         {
             roamC=.01;
@@ -45,12 +44,12 @@ class MatedEnemy extends Enemy
         g2.fill(rect);
         Rectangle rect6=new Rectangle((int)(getX()-(getRadius()/2)),(int)(getY()+(getRadius()/2)),(int)getRadius()*2/3,(int)getRadius()/4);
             
-       Rectangle rect2=new Rectangle((int)(getX()-(getRadius()*2/3)),(int)(getY()-(getRadius()/2)),(int)getRadius()/2,(int)getRadius()/2);
-       Rectangle rect3=new Rectangle((int)(getX()+(getRadius()/3)),(int)(getY()-(getRadius()/2)),(int)getRadius()/2,(int)getRadius()/2);
-       g2.setColor(Color.WHITE);  
+       Rectangle rect2=new Rectangle((int)(getX()-(getRadius()*2/3)),(int)(getY()-(getRadius()/4)),(int)getRadius()/2,(int)getRadius()/4);
+       Rectangle rect3=new Rectangle((int)(getX()+(getRadius()/3)),(int)(getY()-(getRadius()/4)),(int)getRadius()/2,(int)getRadius()/4);
+       g2.setColor(Color.BLACK);  
        g2.fill(rect2);
        g2.fill(rect3);
-       g2.setColor(Color.BLACK);
+       //g2.setColor(Color.BLACK);
        g2.fill(rect6);
         
     }

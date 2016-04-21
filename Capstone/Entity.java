@@ -4,14 +4,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 
-abstract class Enemy extends Shape
+abstract class Entity extends Shape
 {
     boolean alive=true;
     Color color;
     double radius;
     double x;
     double y;
-    public Enemy(Color color, double r)
+    public Entity(Color color, double r)
     {
         super(new Point2D.Double(0,0),0,null);
         radius=r;        
@@ -56,16 +56,30 @@ abstract class Enemy extends Shape
         this.x=x;
     }
     
-    abstract public Shape getMate();
+    public Shape getMate()
+    {
+        return null;
+    }
     
     public boolean isAlive()
     {
         return alive;
     }  
     
-    public void getHit()
+    public void setAlive(boolean alive)
+    {
+        this.alive=alive;
+    }  
+    
+    public void getHit(Player player)
     {
         alive=false;
+        goToX(-999);
+    }
+    
+    public int interactionType()
+    {
+        return 0;//o is bounce, 1 is act as though tangible, 2 is go through
     }
 }
 

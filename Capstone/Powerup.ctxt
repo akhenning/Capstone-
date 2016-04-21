@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.params=color\ staticX\ staticY\ type
+comment0.target=Powerup(java.awt.Color,\ double,\ double,\ int)
+comment1.params=
+comment1.target=void\ calcXY()
+comment2.params=g2
+comment2.target=void\ draw(java.awt.Graphics2D)
+comment3.params=point
+comment3.target=boolean\ isInside(java.awt.geom.Point2D.Double)
+comment4.params=player
+comment4.target=void\ getHit(Player)
+comment5.params=
+comment5.target=int\ interactionType()
+comment6.params=block
+comment6.target=void\ appear(Shape)
+numComments=7

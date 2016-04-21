@@ -59,6 +59,9 @@ public abstract class Shape
         radius=r;
     }
     
+    public void hitFromBottom()
+    {}
+    
     abstract boolean isInside(Point2D.Double point);
     //abstract boolean isOnBorder(Point2D.Double point);
     abstract void draw(Graphics2D g2); 
