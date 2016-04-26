@@ -192,23 +192,34 @@ class Player
         }
         else if(powerUpState==1)
         {
+            color=new Color(255,150,0);
+        }
+        else if(powerUpState==2)
+        {
             color=Color.RED;
         }
-        
         rect=new Rectangle((int)(center.getX()-xradius),(int)(center.getY()-yradius),(int)xradius*2,(int)yradius*2);
                
         Rectangle rect2;
         Rectangle rect3;
-        g2.setColor(color);                 
-        g2.fill(rect);
+        g2.setColor(color);    
+        if(vulnerabilityTimer%2==0)
+        {
+            g2.fill(rect);
+        }
+        else
+        {
+            g2.draw(rect);
+        }
+        
         Rectangle rect4=new Rectangle((int)(center.getX()-(xradius*2/3)),(int)(center.getY()-(yradius/2)),(int)xradius/4,(int)yradius/4);
         Rectangle rect5=new Rectangle((int)(center.getX()+(xradius/3)),(int)(center.getY()-(yradius/2)),(int)xradius/4,(int)yradius/4);
         
         if(!vulnerable)
         {
             Rectangle rect6=new Rectangle((int)(center.getX()-(xradius/2)),(int)(center.getY()+(yradius/2)),(int)xradius*2/3,(int)yradius/4);
-            Line2D.Double l2=new Line2D.Double((center.getX()-(xradius*3/4)),(center.getY()-(yradius*3/5)),center.getX()-xradius/5,center.getY());
-            Line2D.Double l3=new Line2D.Double(center.getX()+xradius*4/5,(center.getY()-(yradius*3/5)),(center.getX()+(xradius/4)),center.getY());
+            Line2D.Double l2=new Line2D.Double((center.getX()-(xradius*3/4)),(center.getY()-(yradius*1/5)),center.getX()-xradius/5,center.getY());
+            Line2D.Double l3=new Line2D.Double(center.getX()+xradius*4/5,(center.getY()-(yradius*1/5)),(center.getX()+(xradius/4)),center.getY());
         
             g2.setColor(Color.BLACK);
             g2.fill(rect6);
@@ -264,6 +275,10 @@ class Player
     {
         return yradius;
     }
+    public double getUpV()
+    {
+        return upVelocity;
+    }
     public double getXRadius()
     {
         return xradius;
@@ -271,6 +286,10 @@ class Player
     public double getScrollX()
     {
         return scrollX;
+    }
+    public int getPowerUpLevel()
+    {
+        return powerUpState;
     }
     
     public void move(double x, double y)

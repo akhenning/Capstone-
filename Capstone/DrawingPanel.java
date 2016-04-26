@@ -19,6 +19,7 @@ public class DrawingPanel extends JPanel
     ArrayList<Shape> groundBlocks;
     ArrayList<Entity> enemies;
     Player player=new Player(new Point2D.Double(100,100),30);
+    Finish finish=new Finish(2500);
     Color current;    
     boolean isShift=false;
     boolean isLeft=false;
@@ -26,6 +27,7 @@ public class DrawingPanel extends JPanel
     static boolean isJumping=false;
     boolean isCrouching=false;
         double lol=.5;
+    int currentLevel=1;
         
     public DrawingPanel()
     {        
@@ -40,7 +42,7 @@ public class DrawingPanel extends JPanel
         groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
         groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
         
-        Powerup lv1=new Powerup(Color.GREEN,500,350,1);
+        Powerup lv1=new Powerup(Color.GREEN,500,350,2);
         groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
         
         groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
@@ -53,6 +55,7 @@ public class DrawingPanel extends JPanel
         enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.05,40));
         enemies.add(new Killplane(Color.RED,1300,600,50));
         enemies.add(lv1);
+        
     }
     
     public Color getColor()
@@ -66,12 +69,20 @@ public class DrawingPanel extends JPanel
         return d;
     }
    
-    //public void addSquare()
-    //{
-    //    shapes.add(new Square(new Point2D.Double(100,100),15,current));
-    //    repaint();
-    //}
-    
+    public void nextLevel()
+    {
+        currentLevel++;
+        //if(level==2)
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+           
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
@@ -131,7 +142,13 @@ public class DrawingPanel extends JPanel
     }
     public void nextFrame()
     {
-        
+        if (player.isHitNextFrame(finish))
+        {
+            finishLevel();//HEAR
+            
+        }
+        else
+        {
         for (Shape shape:groundBlocks)
         {            
             if(player.isHitNextFrame(shape))
@@ -182,6 +199,7 @@ public class DrawingPanel extends JPanel
         }
         repaint();
         requestFocusInWindow();
+        }
     }
     public void lol()
     {

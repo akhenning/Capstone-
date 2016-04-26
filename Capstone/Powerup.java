@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.Rectangle;
 
 class Powerup extends Entity
 {
@@ -32,6 +33,8 @@ class Powerup extends Entity
         //System.out.println(grow);
         if(isAlive())
         {
+            if(type==1)
+            {
             if (grow>-100)
             {
                 grow-=.5;
@@ -46,6 +49,24 @@ class Powerup extends Entity
             g2.fill(ell);
             g2.setColor(Color.ORANGE); 
             g2.fill(ell2);
+            }
+            else if (type==2)
+            {
+                if (grow>-100)
+                {
+                    grow-=.5;
+                }
+                Line2D.Double l1=new Line2D.Double(getX()-radius+2,getY()-radius+2,getX()-radius/2,(getY()));
+                Line2D.Double l2=new Line2D.Double(getX()-radius+2,getY()-radius+2,getX(),(getY()-radius/2));
+                Rectangle rect2=new Rectangle((int)(getX()-radius+3),(int)(getY()-radius/8),(int)radius-6,(int)(radius-6));
+                Rectangle rect3=new Rectangle((int)(getX()-radius/8),(int)(getY()-radius+3),(int)(radius-6),(int)(radius-6));
+                g2.setColor(Color.GREEN);
+                g2.draw(l1);
+                g2.draw(l2);
+                g2.setColor(Color.RED); 
+                g2.fill(rect2);
+                g2.fill(rect3);                
+            }
         }
     }
     

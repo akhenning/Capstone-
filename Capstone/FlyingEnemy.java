@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 
 class FlyingEnemy extends Entity
 {
-    boolean alive=true;
     Rectangle rect;
     Color color;
     double staticX;
