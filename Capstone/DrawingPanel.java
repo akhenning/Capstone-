@@ -19,14 +19,14 @@ public class DrawingPanel extends JPanel
     ArrayList<Shape> groundBlocks;
     ArrayList<Entity> enemies;
     Player player=new Player(new Point2D.Double(100,100),30);
-    Finish finish=new Finish(2500);
+    RectObj finish=new RectObj(new Point2D.Double(3000,100),50,1000,Color.BLACK);
     Color current;    
     boolean isShift=false;
     boolean isLeft=false;
     boolean isRight=false;
     static boolean isJumping=false;
     boolean isCrouching=false;
-        double lol=.5;
+    double lol=.5;
     int currentLevel=1;
         
     public DrawingPanel()
@@ -39,22 +39,7 @@ public class DrawingPanel extends JPanel
         //addMouseMotionListener(new MovementListener());
         setFocusable(true);
         addKeyListener(new KeysListener());
-        groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
-        groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
-        
-        Powerup lv1=new Powerup(Color.GREEN,500,350,2);
-        groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
-        
-        groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
-        groundBlocks.add(new SquareObj(new Point2D.Double(1500,500),50,Color.RED));
-        groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
-        groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
-        
-        enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(6),50));
-        enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50));
-        enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.05,40));
-        enemies.add(new Killplane(Color.RED,1300,600,50));
-        enemies.add(lv1);
+        loadLevel(currentLevel);
         
     }
     
@@ -68,12 +53,42 @@ public class DrawingPanel extends JPanel
         Dimension d=new Dimension(350,300);
         return d;
     }
+    
+    public void finishLevel()
+    {           
+        
+        try {
+            Thread.sleep(30);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        
+        while (player.getYRadius()<1000)
+        {
+            player.changeRadius(20);
+            repaint();
+            try {
+                Thread.sleep(30);                 //1000 milliseconds is one second.
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            
+        }        
+        while (player.getY()<890+player.getUpV())
+        {
+            player.calcMove(false);
+            repaint();
+        }
+        nextLevel();
+    }
    
     public void nextLevel()
     {
-        currentLevel++;
-        //if(level==2)
         
+        player.resetRadii();
+        Player.scrollX=0;
+        player.goTo(100,100);
+        loadLevel(currentLevel);
         
         
         
@@ -88,11 +103,21 @@ public class DrawingPanel extends JPanel
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(4));
-        player.draw(g2);
         
+        double position=finish.getStaticX()-Player.scrollX;
+        if (position+finish.getXL()>-20&&position-finish.getXL()<1220)
+        {
+            finish.goToX(position);
+            finish.draw(g2);
+        }
+        else
+        {
+            finish.goToX(-999);
+        }
+        finish.draw(g2);        
         for (Entity enemy:enemies)
         {            
-            if(enemy.isAlive())
+            if(enemy.getX()!=-999&&enemy.isAlive())
             {
                 if (enemy.getMate()!=null)
                 {
@@ -125,7 +150,7 @@ public class DrawingPanel extends JPanel
         
         for (Shape shape:groundBlocks)
         {            
-            double position=shape.getStaticX()-player.getScrollX();
+            position=shape.getStaticX()-player.getScrollX();
             if (position+shape.getXL()>-20&&position-shape.getXL()<1220)
             {
                 shape.goToX(position);
@@ -137,7 +162,7 @@ public class DrawingPanel extends JPanel
             }
         }
         
-        
+        player.draw(g2);
         // System.out.println(current);
     }
     public void nextFrame()
@@ -163,8 +188,8 @@ public class DrawingPanel extends JPanel
         
         for (Entity enemy:enemies)
         {            
-            
-            if(enemy.isAlive())
+            System.out.println(enemy.isAlive());
+            if(enemy.getX()!=-999&&enemy.isAlive())
             {
                 boolean b=player.isOnTopOfNextFrame(enemy);        
                 if (b)
@@ -197,8 +222,13 @@ public class DrawingPanel extends JPanel
         {
             player.moveX(0,isShift,isCrouching);
         }
+        if(player.getDed())
+        {
+            loadLevel(currentLevel);
+        }
         repaint();
         requestFocusInWindow();
+        
         }
     }
     public void lol()
@@ -216,28 +246,32 @@ public class DrawingPanel extends JPanel
             player.changeRadius(lol);
         }
      }
-//     public class ClickListener implements MouseListener
-//     {
-//         
-//         public void mouseClicked(MouseEvent e)
-//         {}
-//         public void mouseEntered(MouseEvent e)
-//         {}
-//         public void mouseExited(MouseEvent e)
-//         {}
-//         public void mousePressed(MouseEvent e)
-//         {
-//             
-//             //repaint();
-//             //requestFocusInWindow();
-//         }
-//         public void mouseReleased(MouseEvent e)
-//         {
-//             //canDrag=false;
-//             //nowResize=false;
-//             //requestFocusInWindow();
-//         }
-//     }
+    public void loadLevel(int which)
+    {
+        groundBlocks=new ArrayList<Shape>();
+        enemies=new ArrayList<Entity>();
+        
+        if (which==1)
+        {
+            groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
+            groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
+            
+            Powerup lv1=new Powerup(Color.GREEN,500,350,2);
+            groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
+            
+            groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
+            groundBlocks.add(new SquareObj(new Point2D.Double(1500,500),50,Color.RED));
+            groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
+            groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
+            
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(6),50));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50));
+            enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.01,40));
+            enemies.add(new Killplane(Color.RED,1300,600,50));
+            enemies.add(lv1);            
+        }
+        
+    }
     public class KeysListener implements KeyListener
     {
         

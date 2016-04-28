@@ -24,11 +24,12 @@ class Player
     int powerUpState=0;
     boolean vulnerable=true;
     double vulnerabilityTimer=0;
+    boolean ded=false;//ded==dead
     public Player(Point2D.Double center, double radius)
     {
         this.center=center;
         this.xradius=radius;
-        this.yradius=yradius=25;            
+        this.yradius=25;            
         rect=new Rectangle((int)(center.getX()-radius),(int)(center.getY()-radius),(int)radius*2,(int)radius*2);
     }
     
@@ -55,7 +56,7 @@ class Player
             
             if (center.getY()>900)
             {
-                takeDamage(0);
+                takeDamage(3);
             }
         }
         else
@@ -83,7 +84,7 @@ class Player
             
             if (center.getY()>900)
             {
-                takeDamage(0);
+                takeDamage(3);
             }
             //System.out.println(center);
         }
@@ -177,7 +178,7 @@ class Player
     
     void draw(Graphics2D g2)
     {                
-        System.out.println(vulnerabilityTimer);
+        //System.out.println(vulnerabilityTimer);
         if (vulnerabilityTimer!=0)
         {
             vulnerabilityTimer--;
@@ -270,7 +271,20 @@ class Player
     {
         yradius+=delta;
         xradius+=delta;
-    }    
+    }   
+    public boolean getDed()
+    {
+        return ded;
+    }
+    public void setDed(boolean ded)
+    {
+        this.ded=ded;
+    }
+    public void resetRadii()
+    {
+        yradius=30+(10*powerUpState);;
+        xradius=30;
+    }   
     public double getYRadius()
     {
         return yradius;
@@ -290,6 +304,10 @@ class Player
     public int getPowerUpLevel()
     {
         return powerUpState;
+    }
+    public double getY()
+    {
+        return center.getY();
     }
     
     public void move(double x, double y)
@@ -366,11 +384,32 @@ class Player
                 yradius=30+(10*powerUpState);
                 if(powerUpState<0)
                 {
+                    ded=true;
                     goTo(50, 400);
                     scrollX=0;
                     powerUpState=0;
                     yradius=30+(10*powerUpState);
                 }
+            }
+            else if (type==3)
+            {
+                vulnerable=false;
+                vulnerabilityTimer=100;
+                powerUpState--;     
+                yradius=30+(10*powerUpState);
+                if(powerUpState<0)
+                {
+                    ded=true;
+                    goTo(50, 400);
+                    scrollX=0;
+                    powerUpState=0;
+                    yradius=30+(10*powerUpState);
+                }
+                else
+                {
+                    goTo(center.getX()-200,100);
+                }
+                
             }
         }
     }

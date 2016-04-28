@@ -33,6 +33,10 @@ public abstract class Shape
     {
         return STATIC_X;
     }
+    double getX()
+    {
+        return center.getX();
+    }
     
     double getHeight()
     {
