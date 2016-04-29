@@ -31,6 +31,7 @@ abstract class Entity extends Shape
     }
     double getX()
     {
+        // System.out.println(x+"   "+y);
         return x;
     }
     double getY()
@@ -40,7 +41,9 @@ abstract class Entity extends Shape
     
     void setX(double x2)
     {
+        
         x=x2;
+       
     }
     void setY(double y2)
     {

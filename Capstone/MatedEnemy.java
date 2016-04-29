@@ -12,26 +12,29 @@ class MatedEnemy extends Entity
     Shape matedShape;
     double x;
     double roam=1;
-    double roamC=-.01;
-    public MatedEnemy(Color color, Shape matedShape, double r)
+    double roamC;
+    public MatedEnemy(Color color, Shape matedShape, double r,double speed)
     {
         super(color,r);
         this.matedShape=matedShape;
-        this.color=color;    
+        this.color=color;   
+        roamC=speed;//~.01
+        setX(-999);
        
     }
     public void calcXY()
     {
+        
         setY(matedShape.getCenter().getY()-matedShape.getYL()-getRadius());
         setX(matedShape.getCenter().getX()+(matedShape.getXL()*roam));
         x=matedShape.getStaticX()-Player.scrollX+(matedShape.getXL()*roam);
         if (roam<-1)
         {
-            roamC=.01;
+            roamC=Math.abs(roamC);
         }
         else if (roam>1)
         {
-            roamC=-.01;
+            roamC=-1*Math.abs(roamC);
         }
         roam+=roamC;
     }

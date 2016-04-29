@@ -79,22 +79,16 @@ public class DrawingPanel extends JPanel
             player.calcMove(false);
             repaint();
         }
+        currentLevel++;
         nextLevel();
     }
    
     public void nextLevel()
     {
         
-        player.resetRadii();
-        Player.scrollX=0;
+        player.resetRadii();     
         player.goTo(100,100);
         loadLevel(currentLevel);
-        
-        
-        
-        
-        
-        
         
     }
            
@@ -114,18 +108,17 @@ public class DrawingPanel extends JPanel
         {
             finish.goToX(-999);
         }
-        finish.draw(g2);        
+        finish.draw(g2);      
         for (Entity enemy:enemies)
         {            
-            if(enemy.getX()!=-999&&enemy.isAlive())
+            if(enemy.isAlive())
             {
                 if (enemy.getMate()!=null)
                 {
                     if(enemy.getMate().getCenter().getX()!=-999)
                     {
                         enemy.calcXY();
-                        enemy.draw(g2);
-                
+                        enemy.draw(g2);                       
                     }
                     else
                     {
@@ -169,66 +162,63 @@ public class DrawingPanel extends JPanel
     {
         if (player.isHitNextFrame(finish))
         {
-            finishLevel();//HEAR
+            finishLevel();  
             
         }
         else
         {
-        for (Shape shape:groundBlocks)
-        {            
-            if(player.isHitNextFrame(shape))
-            {
-                player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getXL(),shape.getYL(),shape);
-              
-            }
-            boolean b=player.isOnTopOfNextFrame(shape);
-            int top=(int)(shape.getCenter().getY()-shape.getYL());
-            player.whenTouchingGround(b,top);
-        }
-        
-        for (Entity enemy:enemies)
-        {            
-            System.out.println(enemy.isAlive());
-            if(enemy.getX()!=-999&&enemy.isAlive())
-            {
-                boolean b=player.isOnTopOfNextFrame(enemy);        
-                if (b)
+             
+            for (Shape shape:groundBlocks)
+            {            
+                if(player.isHitNextFrame(shape))
                 {
-                    player.bounce(enemy.interactionType());
-                    enemy.getHit(player);
+                    player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getXL(),shape.getYL(),shape);
+                  
                 }
-                else if(player.isHitNextFrame(enemy))
-                {
-                    player.takeDamage(enemy.interactionType());
-                    
-                    
-                }
+                boolean b=player.isOnTopOfNextFrame(shape);
+                int top=(int)(shape.getCenter().getY()-shape.getYL());
+                player.whenTouchingGround(b,top);
             }            
-        }
-        
-        player.calcMove(isJumping);
-        //System.out.println(isCrouching);
-        if (isLeft)
-        {
-            player.moveX(-1,isShift,isCrouching);
-            lol();
-        }
-        if (isRight)
-        {
-            player.moveX(1,isShift,isCrouching);
-            lol();
-        }
-        if (!isLeft&&!isRight)
-        {
-            player.moveX(0,isShift,isCrouching);
-        }
-        if(player.getDed())
-        {
-            loadLevel(currentLevel);
-        }
-        repaint();
-        requestFocusInWindow();
-        
+            for (Entity enemy:enemies)
+            {                            
+                if(enemy.getX()!=-999&&enemy.isAlive())
+                {
+                    boolean b=player.isOnTopOfNextFrame(enemy);        
+                    if (b)
+                    {
+                        player.bounce(enemy.interactionType());
+                        enemy.getHit(player);
+                    }
+                    else if(player.isHitNextFrame(enemy))
+                    {
+                        player.takeDamage(enemy.interactionType());
+                        
+                        
+                    }
+                }            
+            }            
+            player.calcMove(isJumping);      
+            if (isLeft)
+            {
+                player.moveX(-1,isShift,isCrouching);
+                lol();
+            }
+            if (isRight)
+            {
+                player.moveX(1,isShift,isCrouching);
+                lol();
+            }
+            if (!isLeft&&!isRight)
+            {
+                player.moveX(0,isShift,isCrouching);
+            }
+            if(player.getDed())
+            {
+                loadLevel(currentLevel);
+            }
+            repaint();
+            requestFocusInWindow();
+            
         }
     }
     public void lol()
@@ -250,8 +240,28 @@ public class DrawingPanel extends JPanel
     {
         groundBlocks=new ArrayList<Shape>();
         enemies=new ArrayList<Entity>();
+        Player.scrollX=0;
         
         if (which==1)
+        {
+            groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
+            groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
+            
+            Powerup lv1=new Powerup(Color.GREEN,500,350,1);
+            groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
+            
+            groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
+            groundBlocks.add(new SquareObj(new Point2D.Double(1500,500),50,Color.RED));
+            groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
+            groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
+            
+            enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02));
+            enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.01,40));
+            enemies.add(new Killplane(Color.RED,1300,600,50));
+            enemies.add(lv1);            
+        }
+        else if (which==2)
         {
             groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
             groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
@@ -264,8 +274,8 @@ public class DrawingPanel extends JPanel
             groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
             groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
             
-            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(6),50));
-            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50));
+            enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02));
             enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.01,40));
             enemies.add(new Killplane(Color.RED,1300,600,50));
             enemies.add(lv1);            
@@ -326,6 +336,11 @@ public class DrawingPanel extends JPanel
             }       
         }
         public void keyTyped(KeyEvent e)
-        {}
+        {
+            if (e.getKeyCode()==KeyEvent.VK_P)
+            {
+                 Player.scrollX-=10;
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=color\ matedShape\ r
-comment0.target=MatedEnemy(java.awt.Color,\ Shape,\ double)
+comment0.params=color\ matedShape\ r\ speed
+comment0.target=MatedEnemy(java.awt.Color,\ Shape,\ double,\ double)
 comment1.params=
 comment1.target=void\ calcXY()
 comment2.params=g2

@@ -35,7 +35,8 @@ class Player
     
     public void calcMove(boolean space)
     {
-        
+        if(ded&&scrollX==0)
+        {ded=false;}
         if (center.getX()>=600&&xVelocity>0)
         {       
             scrolling=true;
@@ -386,7 +387,7 @@ class Player
                 {
                     ded=true;
                     goTo(50, 400);
-                    scrollX=0;
+                    //scrollX=0;
                     powerUpState=0;
                     yradius=30+(10*powerUpState);
                 }
@@ -401,7 +402,7 @@ class Player
                 {
                     ded=true;
                     goTo(50, 400);
-                    scrollX=0;
+                    //scrollX=0;
                     powerUpState=0;
                     yradius=30+(10*powerUpState);
                 }
