@@ -18,7 +18,7 @@ public class DrawingPanel extends JPanel
 {
     ArrayList<Shape> groundBlocks;
     ArrayList<Entity> enemies;
-    Player player=new Player(new Point2D.Double(100,100),30);
+    Player player=new Player(new Point2D.Double(100,400),30);
     RectObj finish=new RectObj(new Point2D.Double(3000,100),50,1000,Color.BLACK);
     Color current;    
     boolean isShift=false;
@@ -27,7 +27,9 @@ public class DrawingPanel extends JPanel
     static boolean isJumping=false;
     boolean isCrouching=false;
     double lol=.5;
+    double wlol=.01;
     int currentLevel=1;
+    static double wobble=1;
         
     public DrawingPanel()
     {        
@@ -87,7 +89,7 @@ public class DrawingPanel extends JPanel
     {
         
         player.resetRadii();     
-        player.goTo(100,100);
+        player.goTo(100,300);
         loadLevel(currentLevel);
         
     }
@@ -167,19 +169,7 @@ public class DrawingPanel extends JPanel
         }
         else
         {
-             
-            for (Shape shape:groundBlocks)
-            {            
-                if(player.isHitNextFrame(shape))
-                {
-                    player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getXL(),shape.getYL(),shape);
-                  
-                }
-                boolean b=player.isOnTopOfNextFrame(shape);
-                int top=(int)(shape.getCenter().getY()-shape.getYL());
-                player.whenTouchingGround(b,top);
-            }            
-            for (Entity enemy:enemies)
+             for (Entity enemy:enemies)
             {                            
                 if(enemy.getX()!=-999&&enemy.isAlive())
                 {
@@ -196,7 +186,19 @@ public class DrawingPanel extends JPanel
                         
                     }
                 }            
-            }            
+            }    
+            for (Shape shape:groundBlocks)
+            {            
+                if(player.isHitNextFrame(shape))
+                {
+                    player.hitWall(shape.getCenter().getX(),shape.getCenter().getY(),shape.getXL(),shape.getYL(),shape);
+                  
+                }
+                boolean b=player.isOnTopOfNextFrame(shape);
+                int top=(int)(shape.getCenter().getY()-shape.getYL());
+                player.whenTouchingGround(b,top);
+            }         
+                                
             player.calcMove(isJumping);      
             if (isLeft)
             {
@@ -216,6 +218,15 @@ public class DrawingPanel extends JPanel
             {
                 loadLevel(currentLevel);
             }
+            if(wobble>1)
+            {
+                wlol=-.02;                
+            }
+            else if (wobble<-1)
+            {
+                wlol=.04;
+            }
+            wobble+=wlol;
             repaint();
             requestFocusInWindow();
             
@@ -255,8 +266,8 @@ public class DrawingPanel extends JPanel
             groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
             groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
             
-            enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01));
-            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02));
+            enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01,5));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02,5));
             enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.01,40));
             enemies.add(new Killplane(Color.RED,1300,600,50));
             enemies.add(lv1);            
@@ -267,20 +278,43 @@ public class DrawingPanel extends JPanel
             groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
             
             Powerup lv1=new Powerup(Color.GREEN,500,350,2);
-            groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
+            groundBlocks.add(new BoxWithItem(new Point2D.Double(500,250),50,Color.RED,lv1));
             
-            groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
-            groundBlocks.add(new SquareObj(new Point2D.Double(1500,500),50,Color.RED));
-            groundBlocks.add(new RectObj(new Point2D.Double(1900,700),300,50,Color.YELLOW));
+            groundBlocks.add(new SquareObj(new Point2D.Double(1100,725),50,Color.BLUE));
+            groundBlocks.add(new SquareObj(new Point2D.Double(2500,300),50,Color.RED));
+            groundBlocks.add(new RectObj(new Point2D.Double(1500,600),50,500,Color.YELLOW));
             groundBlocks.add(new RectObj(new Point2D.Double(1900,300),150,50,Color.BLACK));
             
-            enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01));
-            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02));
-            enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.01,40));
-            enemies.add(new Killplane(Color.RED,1300,600,50));
+            enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01,5));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02,5));
+            enemies.add(new FlyingEnemy(Color.BLUE, 600, 400 , 200,.002,40));
+            enemies.add(new Killplane(Color.RED,1400,750,50));
             enemies.add(lv1);            
         }
-        
+        else if (which==3)
+        {
+            groundBlocks.add(new RectObj(new Point2D.Double(425,625),400,25,Color.BLACK));
+            groundBlocks.add(new RectObj(new Point2D.Double(800,650),60,450,Color.YELLOW));
+            groundBlocks.add(new RectObj(new Point2D.Double(1100,100),40,300,Color.YELLOW));
+            finish=new RectObj(new Point2D.Double(1300,100),50,1000,Color.BLACK);              
+        }
+        else if (which==4)
+        {
+            groundBlocks.add(new RectObj(new Point2D.Double(1000,800),1000,75,Color.BLACK));
+            groundBlocks.add(new RectObj(new Point2D.Double(1000,125),1000,75,Color.BLACK));
+            enemies.add(new FlyingEnemy(Color.ORANGE,600,400,150,.001,40));
+            enemies.add(new FlyingEnemy(Color.ORANGE,1100,0,550,.0005,40));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(1),75,.001,75));
+            enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(0),35,.002,5));
+            enemies.add(new Killplane(Color.RED,1350,675,50));
+            enemies.add(new Killplane(Color.RED,1350,575,50));
+            enemies.add(new Killplane(Color.RED,1350,250,50));
+            enemies.add(new Killplane(Color.RED,900,675,50));                       
+            enemies.add(new Killplane(Color.RED,1850,625,100));  
+            enemies.add(new Killplane(Color.RED,1850,475,50));   
+            
+            finish=new RectObj(new Point2D.Double(2000,100),50,1000,Color.BLACK);
+        }
     }
     public class KeysListener implements KeyListener
     {
@@ -309,6 +343,10 @@ public class DrawingPanel extends JPanel
             {
                  isCrouching=true;
             }       
+            else if (e.getKeyCode()==KeyEvent.VK_P)
+            {
+                 Player.scrollX-=20;
+            }
             //repaint();
             requestFocusInWindow();           
         }
@@ -333,14 +371,12 @@ public class DrawingPanel extends JPanel
             else if (e.getKeyCode()==KeyEvent.VK_S)
             {
                  isCrouching=false;
-            }       
+            }   
+            
         }
         public void keyTyped(KeyEvent e)
         {
-            if (e.getKeyCode()==KeyEvent.VK_P)
-            {
-                 Player.scrollX-=10;
-            }
+            
         }
     }
 }

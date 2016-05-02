@@ -25,10 +25,13 @@ class Killplane extends Entity
     {
         Line2D.Double l1=new Line2D.Double(getX()-(radius-3),(getY()-(radius-3)),getX()+(radius-3),(getY()+(radius-3)));
         Line2D.Double l2=new Line2D.Double(getX()+(radius-3),(getY()-(radius-3)),getX()-(radius-3),(getY()+(radius-3)));
-        
+        Rectangle rect=new Rectangle((int)(getX()-radius),(int)(getY()-radius),(int)radius*2,(int)radius*2);
+        g2.setColor(new Color(255,220,200));
+        g2.fill(rect);
         g2.setColor(color);  
         g2.draw(l1);
         g2.draw(l2);
+        
     }
     
     boolean isInside(Point2D.Double point)

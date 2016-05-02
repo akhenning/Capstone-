@@ -9,6 +9,7 @@ import java.awt.geom.Line2D;
 class Player
 {
     Point2D.Double center;
+    double baseRadius;
     double xradius;
     double yradius;
     Rectangle rect;
@@ -29,14 +30,19 @@ class Player
     {
         this.center=center;
         this.xradius=radius;
-        this.yradius=25;            
+        this.yradius=25;       
+        baseRadius=radius+5;
         rect=new Rectangle((int)(center.getX()-radius),(int)(center.getY()-radius),(int)radius*2,(int)radius*2);
     }
     
     public void calcMove(boolean space)
     {
         if(ded&&scrollX==0)
-        {ded=false;}
+        {ded=false;}              
+        if (center.getY()<-200)
+        {
+            upVelocity=-1;
+        }
         if (center.getX()>=600&&xVelocity>0)
         {       
             scrolling=true;
@@ -49,12 +55,29 @@ class Player
             else
             {                  
                 upVelocity-=.75;        
+            }            
+            scrollX+=xVelocity;            
+            xVelocity*=.95;                       
+            if (center.getY()>900)
+            {
+                takeDamage(3);
             }
+        }
+        else if (center.getX()<=225&&xVelocity<0)
+        {       
+            scrolling=true;
             
-            scrollX+=xVelocity;
-            
-            xVelocity*=.95;
-            
+            move(0,-1*upVelocity);
+            if (upVelocity<-2||space)
+            {
+                upVelocity-=.25;            
+            }
+            else
+            {                  
+                upVelocity-=.75;        
+            }            
+            scrollX+=xVelocity;            
+            xVelocity*=.95;                       
             if (center.getY()>900)
             {
                 takeDamage(3);
@@ -80,9 +103,7 @@ class Player
             {                  
                 upVelocity-=.75;        
             }
-            
-            xVelocity*=.95;
-            
+            xVelocity*=.95;            
             if (center.getY()>900)
             {
                 takeDamage(3);
@@ -128,13 +149,13 @@ class Player
             
             if (xVelocity>35||xVelocity<-35)
             {            
-                xVelocity*=9;
-                xVelocity/=10;
+                xVelocity*=.9;
+                //xVelocity/=10;
             }
             else if ((xVelocity>25||xVelocity<-25)&&!shift)
             {
-                xVelocity*=9;
-                xVelocity/=10;
+                xVelocity*=.9;
+                //xVelocity/=10;
             }
         }
     }        
@@ -151,6 +172,10 @@ class Player
             {
                 upVelocity=12+Math.abs(xVelocity/2);
             }
+        }
+        else if (powerUpState==2)
+        {
+            upVelocity=1;
         }
         touching=false;
     }    
@@ -259,6 +284,11 @@ class Player
         
         
     }
+    public void stop()
+    {
+        xVelocity=0;
+        upVelocity=0;
+    }
             
     public void setSpeed(int speed)
     {
@@ -284,7 +314,7 @@ class Player
     public void resetRadii()
     {
         yradius=30+(10*powerUpState);;
-        xradius=30;
+        xradius=baseRadius;
     }   
     public double getYRadius()
     {
@@ -309,6 +339,10 @@ class Player
     public double getY()
     {
         return center.getY();
+    }
+    public double getX()
+    {
+        return center.getX();
     }
     
     public void move(double x, double y)
@@ -372,6 +406,7 @@ class Player
     {
         powerUpState=identity;
         yradius=30+(10*powerUpState);
+        xradius=baseRadius;
     }
     public void takeDamage(int type)
     {
@@ -390,6 +425,8 @@ class Player
                     //scrollX=0;
                     powerUpState=0;
                     yradius=30+(10*powerUpState);
+                    xradius=baseRadius;
+                    stop();
                 }
             }
             else if (type==3)
@@ -405,10 +442,13 @@ class Player
                     //scrollX=0;
                     powerUpState=0;
                     yradius=30+(10*powerUpState);
+                    xradius=baseRadius;
+                    stop();
                 }
                 else
                 {
                     goTo(center.getX()-200,100);
+                    stop();
                 }
                 
             }

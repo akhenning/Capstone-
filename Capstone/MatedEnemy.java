@@ -3,7 +3,6 @@ import java.awt.geom.Point2D;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-
 class MatedEnemy extends Entity
 {
     boolean alive=true;
@@ -13,18 +12,21 @@ class MatedEnemy extends Entity
     double x;
     double roam=1;
     double roamC;
-    public MatedEnemy(Color color, Shape matedShape, double r,double speed)
+    double rRange;
+    final double finRadius;
+    public MatedEnemy(Color color, Shape matedShape, double r,double speed, double rVariation)
     {
         super(color,r);
         this.matedShape=matedShape;
         this.color=color;   
         roamC=speed;//~.01
         setX(-999);
-       
+        rRange=rVariation;
+        finRadius=r;
     }
     public void calcXY()
     {
-        
+        setRadius(finRadius+(DrawingPanel.wobble*rRange));
         setY(matedShape.getCenter().getY()-matedShape.getYL()-getRadius());
         setX(matedShape.getCenter().getX()+(matedShape.getXL()*roam));
         x=matedShape.getStaticX()-Player.scrollX+(matedShape.getXL()*roam);
@@ -36,6 +38,7 @@ class MatedEnemy extends Entity
         {
             roamC=-1*Math.abs(roamC);
         }
+        
         roam+=roamC;
     }
     public void draw(Graphics2D g2)

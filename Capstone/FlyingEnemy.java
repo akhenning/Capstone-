@@ -14,6 +14,7 @@ class FlyingEnemy extends Entity
     double flightSpeed;
     double roam=1;
     double roamV=-.01;
+    final double finRadius;
     public FlyingEnemy(Color color, double staticX, double staticY, double flightRange, double flightSpeed, double radius)
     {
         super(color,radius);
@@ -23,10 +24,12 @@ class FlyingEnemy extends Entity
         this.flightRange=flightRange;
         this.flightSpeed=flightSpeed;
         roamV=flightSpeed;
+        finRadius=radius;
 
     }
     public void calcXY()
     {
+        setRadius(finRadius+(DrawingPanel.wobble*5));
         setY(staticY+(flightRange*roam));        
         setX(staticX-Player.scrollX);
         
