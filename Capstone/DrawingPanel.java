@@ -18,6 +18,7 @@ public class DrawingPanel extends JPanel
 {
     ArrayList<Shape> groundBlocks;
     ArrayList<Entity> enemies;
+    ArrayList<Projectile> projectiles;
     Player player=new Player(new Point2D.Double(100,400),30);
     RectObj finish=new RectObj(new Point2D.Double(3000,100),50,1000,Color.BLACK);
     Color current;    
@@ -35,6 +36,7 @@ public class DrawingPanel extends JPanel
     {        
         groundBlocks=new ArrayList<Shape>();
         enemies=new ArrayList<Entity>();
+        projectiles=new ArrayList<Projectile>();
         setBackground(Color.WHITE);       
         current=new Color(0,0,0);
         //addMouseListener(new ClickListener());
@@ -110,7 +112,19 @@ public class DrawingPanel extends JPanel
         {
             finish.goToX(-999);
         }
-        finish.draw(g2);      
+        finish.draw(g2);    
+        for (int i=0;i<projectiles.size();i++)
+        {   
+            projectiles.get(i).calcXY();
+            if(projectiles.get(i).isAlive()==false)
+            {
+                projectiles.remove(i);
+            }
+            else
+            {
+                projectiles.get(i).draw(g2);
+            }
+        }
         for (Entity enemy:enemies)
         {            
             if(enemy.isAlive())
@@ -145,7 +159,7 @@ public class DrawingPanel extends JPanel
         
         for (Shape shape:groundBlocks)
         {            
-            position=shape.getStaticX()-player.getScrollX();
+            position=shape.getStaticX()-player.scrollX;
             if (position+shape.getXL()>-20&&position-shape.getXL()<1220)
             {
                 shape.goToX(position);
@@ -177,13 +191,18 @@ public class DrawingPanel extends JPanel
                     if (b)
                     {
                         player.bounce(enemy.interactionType());
-                        enemy.getHit(player);
+                        enemy.getHit(player,true);
                     }
                     else if(player.isHitNextFrame(enemy))
                     {
-                        player.takeDamage(enemy.interactionType());
-                        
-                        
+                        player.takeDamage(enemy.interactionType());                                              
+                    }
+                    for (Projectile p :projectiles)
+                    {
+                        if(p.isTouching(enemy))
+                        {
+                            enemy.getHit(player,false);
+                        }
                     }
                 }            
             }    
@@ -247,6 +266,11 @@ public class DrawingPanel extends JPanel
             player.changeRadius(lol);
         }
      }
+     public void makeProjectile()
+    {
+        projectiles.add(new Projectile(player, player.getPowerUpLevel()));
+         
+    }
     public void loadLevel(int which)
     {
         groundBlocks=new ArrayList<Shape>();
@@ -325,14 +349,20 @@ public class DrawingPanel extends JPanel
             if (e.getKeyCode()==KeyEvent.VK_SPACE)
             {
                 player.jump();
+                
                 isJumping=true;
             }
             else if (e.getKeyCode()==16)
             {
+                if(isShift==false&&player.getPowerUpLevel()>0)
+                {
+                    makeProjectile();
+                }
                 isShift=true;
             }
             else if (e.getKeyCode()==KeyEvent.VK_A)
             {
+                
                  isLeft=true;
             }
             else if (e.getKeyCode()==KeyEvent.VK_D)

@@ -39,10 +39,12 @@ class Killplane extends Entity
         return (Math.abs(getX()-point.getX())<getRadius())&&(Math.abs(getY()-point.getY())<getRadius());
     }                 
     
-    public void getHit(Player player)
+    public void getHit(Player player, boolean contact)
     {        
-        player.takeDamage(1);
-        
+        if(contact)
+        {
+            player.takeDamage(1);        
+        } 
     }
     
     public int interactionType()

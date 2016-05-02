@@ -328,10 +328,6 @@ class Player
     {
         return xradius;
     }
-    public double getScrollX()
-    {
-        return scrollX;
-    }
     public int getPowerUpLevel()
     {
         return powerUpState;

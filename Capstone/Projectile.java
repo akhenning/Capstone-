@@ -6,6 +6,7 @@ import java.awt.geom.Ellipse2D;
 public class Projectile extends Entity
 {          
     Color color;
+    double type;
     double staticX;
     double staticY;
     double upV;
@@ -13,17 +14,27 @@ public class Projectile extends Entity
     public Projectile(Player player, int powerlevel)
     {
         super(Color.RED,20);
-        staticX=player.getX();
-        staticY=player.getY();
+        staticX=player.getX()+Player.scrollX;
+        setY(player.getY());
+        setX(staticX);
         upV=player.getUpV()+10;
         color=Color.RED;     
-        
+        type=powerlevel;
 
     }
     public void calcXY()
     {
-        setY(staticY);        
-        setX(staticX-Player.scrollX);
+        if(type==1||type==2)
+        {
+            setY(getY()-upV);        
+            setX(staticX-Player.scrollX);
+            staticX+=4;
+            upV-=.2;
+        }        
+        if(getY()<-10)
+        {
+            setAlive(false);
+        }
         
         
     }
@@ -46,6 +57,11 @@ public class Projectile extends Entity
         return null;
     }
         
+    public boolean isTouching(Shape on)
+    {
+       return (on.getCenter().distance(new Point2D.Double(getX(),getY()))<on.getXL()*.8);//I think this is slow
+       
+    }    
 }
 
 

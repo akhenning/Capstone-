@@ -74,7 +74,7 @@ abstract class Entity extends Shape
         this.alive=alive;
     }  
     
-    public void getHit(Player player)
+    public void getHit(Player player, boolean contace)
     {
         alive=false;
         goToX(-999);
