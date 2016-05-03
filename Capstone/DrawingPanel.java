@@ -170,9 +170,12 @@ public class DrawingPanel extends JPanel
                 shape.goToX(-999);
             }
         }
-        
+        if (projectiles.size()>10)
+        {
+            projectiles.remove(0);
+        }
         player.draw(g2);
-        // System.out.println(current);
+        
     }
     public void nextFrame()
     {
@@ -201,7 +204,7 @@ public class DrawingPanel extends JPanel
                     {
                         if(p.isTouching(enemy))
                         {
-                            enemy.getHit(player,false);
+                            enemy.getHit(player,false);                            
                         }
                     }
                 }            
@@ -268,7 +271,18 @@ public class DrawingPanel extends JPanel
      }
      public void makeProjectile()
     {
-        projectiles.add(new Projectile(player, player.getPowerUpLevel()));
+        if(projectiles.size()+1<=player.getPowerUpLevel()*2)
+        {    
+            projectiles.add(new Projectile(player, player.getPowerUpLevel(),0));
+            if (player.getPowerUpLevel()==3)
+            {
+                projectiles.add(new Projectile(player, player.getPowerUpLevel(),player.getUpV()));
+            }
+        }
+        //else
+        //{
+        //    projectiles.add(new Projectile(player, player.getPowerUpLevel()));
+        //}
          
     }
     public void loadLevel(int which)
@@ -282,7 +296,7 @@ public class DrawingPanel extends JPanel
             groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
             groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
             
-            Powerup lv1=new Powerup(Color.GREEN,500,350,1);
+            Powerup lv1=new Powerup(Color.GREEN,500,350,3);
             groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
             
             groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));

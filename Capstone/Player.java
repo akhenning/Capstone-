@@ -173,7 +173,7 @@ class Player
                 upVelocity=12+Math.abs(xVelocity/2);
             }
         }
-        else if (powerUpState==2)
+        else if (powerUpState>=2)
         {
             upVelocity=1;
         }
@@ -323,6 +323,10 @@ class Player
     public double getUpV()
     {
         return upVelocity;
+    }
+    public double getXV()
+    {
+        return xVelocity;
     }
     public double getXRadius()
     {

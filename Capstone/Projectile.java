@@ -8,19 +8,23 @@ public class Projectile extends Entity
     Color color;
     double type;
     double staticX;
-    double staticY;
-    double upV;
+    double special;
+    double upV=0;
     double movementSpeed;
-    public Projectile(Player player, int powerlevel)
+    public Projectile(Player player, int powerlevel,double special)
     {
-        super(Color.RED,20);
+        super(Color.RED,10+(powerlevel*10));
         staticX=player.getX()+Player.scrollX;
         setY(player.getY());
         setX(staticX);
-        upV=player.getUpV()+10;
+        if(powerlevel<3)
+        {
+            upV=(player.getUpV()/2)+10;
+        }
         color=Color.RED;     
         type=powerlevel;
-
+        movementSpeed=player.getXV()+2+(powerlevel*powerlevel);
+        this.special=special;
     }
     public void calcXY()
     {
@@ -28,10 +32,29 @@ public class Projectile extends Entity
         {
             setY(getY()-upV);        
             setX(staticX-Player.scrollX);
-            staticX+=4;
+            staticX+=movementSpeed;
             upV-=.2;
-        }        
-        if(getY()<-10)
+        }      
+        else if (type==3)
+        {
+            if(special<0)
+            {
+                 setY(getY()-upV);  
+                 upV+=.05;
+                 movementSpeed-=.05;
+            }
+            setX(staticX-Player.scrollX);
+            staticX+=movementSpeed;            
+        }
+        if(getY()>1000)
+        {
+            setAlive(false);
+        }
+        else if(getX()>1400)
+        {
+            setAlive(false);
+        }
+        else if(getY()<0)
         {
             setAlive(false);
         }
@@ -41,9 +64,17 @@ public class Projectile extends Entity
     public void draw(Graphics2D g2)
     {
         //calcXY(scrollX);        
-        Ellipse2D.Double ell2=new Ellipse2D.Double(getX()-12,getY()-12,24,24);
+        Ellipse2D.Double ell2=new Ellipse2D.Double(getX()-(getRadius()/2),getY()-getRadius()/2,getRadius(),getRadius());
+        
        g2.setColor(Color.RED);  
-       g2.fill(ell2);       
+       g2.fill(ell2);  
+       
+       if(type>1)
+       {
+           Ellipse2D.Double ell=new Ellipse2D.Double(getX()-(getRadius()/3),getY()-getRadius()/3,getRadius()*2/3,getRadius()*2/3);
+           g2.setColor(Color.BLUE);
+           g2.fill(ell);
+       }
         
     }
     
@@ -58,8 +89,8 @@ public class Projectile extends Entity
     }
         
     public boolean isTouching(Shape on)
-    {
-       return (on.getCenter().distance(new Point2D.Double(getX(),getY()))<on.getXL()*.8);//I think this is slow
+    {       
+       return((on.isInside(new Point2D.Double(getX()+getRadius(),getY()))))||(on.isInside(new Point2D.Double(getX(),getY()+getRadius())));
        
     }    
 }
