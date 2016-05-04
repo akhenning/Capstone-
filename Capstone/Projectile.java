@@ -20,7 +20,7 @@ public class Projectile extends Entity
         if(powerlevel<3)
         {
             upV=(player.getUpV()/2)+10;
-        }
+        }              
         color=Color.RED;     
         type=powerlevel;
         movementSpeed=player.getXV()+2+(powerlevel*powerlevel);
@@ -37,11 +37,14 @@ public class Projectile extends Entity
         }      
         else if (type==3)
         {
-            if(special<0)
+            if(special!=0)
             {
                  setY(getY()-upV);  
-                 upV+=.05;
-                 movementSpeed-=.05;
+                 if (special>-1)
+                 {upV+=.05;}
+                 else
+                  {upV-=.05;}
+                 movementSpeed*=.99;
             }
             setX(staticX-Player.scrollX);
             staticX+=movementSpeed;            

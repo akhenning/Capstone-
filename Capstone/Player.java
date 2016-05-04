@@ -404,6 +404,10 @@ class Player
     
     public void getPowerUp(int identity)
     {
+        if(identity==2&&identity==powerUpState)
+        {
+            identity=3;
+        }
         powerUpState=identity;
         yradius=30+(10*powerUpState);
         xradius=baseRadius;
