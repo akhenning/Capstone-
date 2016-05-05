@@ -295,6 +295,7 @@ public class DrawingPanel extends JPanel
         
         if (which==1)
         {
+            finish=new RectObj(new Point2D.Double(3000,100),50,1000,Color.BLACK);
             groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
             groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
             
@@ -314,6 +315,7 @@ public class DrawingPanel extends JPanel
         }
         else if (which==3)
         {
+            finish=new RectObj(new Point2D.Double(3000,100),50,1000,Color.BLACK);
             groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
             groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
             
@@ -333,13 +335,15 @@ public class DrawingPanel extends JPanel
         }
         else if (which==5)
         {
+            finish=new RectObj(new Point2D.Double(1300,100),50,1000,Color.BLACK);
             groundBlocks.add(new RectObj(new Point2D.Double(425,625),400,25,Color.BLACK));
             groundBlocks.add(new RectObj(new Point2D.Double(800,650),60,450,Color.YELLOW));
             groundBlocks.add(new RectObj(new Point2D.Double(1100,100),40,300,Color.YELLOW));
-            finish=new RectObj(new Point2D.Double(1300,100),50,1000,Color.BLACK);              
+                          
         }
         else if (which==9)
         {
+            finish=new RectObj(new Point2D.Double(2000,100),50,1000,Color.BLACK);
             groundBlocks.add(new RectObj(new Point2D.Double(1000,800),1000,75,Color.BLACK));
             groundBlocks.add(new RectObj(new Point2D.Double(1000,125),1000,75,Color.BLACK));
             enemies.add(new FlyingEnemy(Color.ORANGE,600,400,150,.001,40));
@@ -353,72 +357,86 @@ public class DrawingPanel extends JPanel
             enemies.add(new Killplane(Color.RED,1850,625,100));  
             enemies.add(new Killplane(Color.RED,1850,475,50));   
             
-            finish=new RectObj(new Point2D.Double(2000,100),50,1000,Color.BLACK);
+            
         }
         else
         {
             //This will be a random one in theory
-            int length=(int)(Math.random()*2000)+1000;
+            int length=(int)(Math.random()*1500)+1500;
             finish=new RectObj(new Point2D.Double(length,100),50,1000,Color.BLACK);
-            int platforms=(int)Math.random()*3;
+            int platforms=(int)(Math.random()*3);
             if(platforms==0)
             {
                 groundBlocks.add(new RectObj(new Point2D.Double(length/2,650+Math.random()*150),length,75,Color.BLACK));
             }
             else if (platforms==1)
             {
-                groundBlocks.add(new RectObj(new Point2D.Double(length/4,650+Math.random()*150),length/2-50,75,Color.BLACK));
-                groundBlocks.add(new RectObj(new Point2D.Double(length*3/4,650+Math.random()*150),length/2-50,75,Color.BLACK));
+                groundBlocks.add(new RectObj(new Point2D.Double(length/4,650+Math.random()*150),length/4-50,75,Color.BLACK));
+                groundBlocks.add(new RectObj(new Point2D.Double(length*3/4,650+Math.random()*150),length/4-50,75,Color.BLACK));
             }
             else if (platforms==2)
             {
                 groundBlocks.add(new RectObj(new Point2D.Double(length/4,650+Math.random()*150),length/2-200,75,Color.BLACK));
-                groundBlocks.add(new RectObj(new Point2D.Double(length/4,650+Math.random()*150),length/2-200,75,Color.BLACK));
-                enemies.add(new FlyingEnemy(Color.ORANGE,length/2,(Math.random()*800),(Math.random()*125+25),.001,Math.random()*30+30));
+                groundBlocks.add(new RectObj(new Point2D.Double(length/4,650+Math.random()*150),length/4-200,75,Color.BLACK));
+                enemies.add(new FlyingEnemy(Color.ORANGE,length/2,(Math.random()*800),(Math.random()*125+125),.001,Math.random()*30+30));
             }
-            int platformnum=(int)Math.random()*4+1;            
+            System.out.println(platforms);
+            int platformnum=(int)(Math.random()*4)+3;      
+            boolean alreadyhasItem=false;
             for (int i=0;i<platformnum;i++)
             {
-                int type=(int)Math.random()*7;
+                int type=(int)(Math.random()*7);
                 if(type==0)
                 {
-                    Powerup lv1=new Powerup(Color.GREEN,500,350,(int)Math.random()*2);
-                    groundBlocks.add(new BoxWithItem(new Point2D.Double(Math.random()*length/2,Math.random()*250+100),50,Color.RED,lv1));
-                    enemies.add(lv1);
+                    if(alreadyhasItem)
+                    {
+                        alreadyhasItem=true;
+                        Powerup lv1=new Powerup(Color.GREEN,500,350,(int)Math.random()*2);
+                        groundBlocks.add(new BoxWithItem(new Point2D.Double(Math.random()*length/2,Math.random()*250+100),50,Color.RED,lv1));
+                        enemies.add(lv1);
+                    }
+                    else{ type=6;}
                 }
-                else if (type<2)
+                else if (type<4)//horizontal platform
                 {
-                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length*.75,(Math.random()*2+1)*500+200),Math.random()*250+100,Math.random()*20+20,Color.BLACK));
+                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length*.75,Math.random()*300+300),Math.random()*250+100,Math.random()*20+20,randomColor()));
                 }
-                else if (type<6)
+                else if (type<5)//vertical platfrom
                 {
-                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length,(Math.random()*800)),Math.random()*20+25,Math.random()*300,Color.BLACK));
+                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length,(int)(Math.random()*3)*400),Math.random()*40+50,Math.random()*300,randomColor()));
                 }
-                else
+                if (type>4)
                 {
-                     groundBlocks.add(new SquareObj(new Point2D.Double(Math.random()*length,Math.random()*800),Math.random()*50+25,Color.BLACK));
+                     groundBlocks.add(new SquareObj(new Point2D.Double(Math.random()*length,Math.random()*300+300),Math.random()*75+25,randomColor()));
                 }
             }
-            int enemynum=(int)Math.random()*4+1;
+            int enemynum=(int)(Math.random()*4)+1;
             if (enemynum==4)
             {enemynum=7;}
             for (int i=0;i<enemynum;i++)
             {
-                int type=(int)Math.random()*7;
+                int type=(int)(Math.random()*7);
                 if (type<3)
                 {
-                     enemies.add(new MatedEnemy(Color.RED,groundBlocks.get((int)Math.random()*groundBlocks.size()),Math.random()*30+30,.001,Math.random()*20));
+                     enemies.add(new MatedEnemy(randomColor(),groundBlocks.get((int)(Math.random()*groundBlocks.size())),Math.random()*30+30,Math.random()*.002+.003,Math.random()*10));
                 }
                 else if (type<6)
                 {
-                    enemies.add(new FlyingEnemy(Color.ORANGE,Math.random()*length,(Math.random()*800),(Math.random()*125+25),.001,Math.random()*30+30));
+                    enemies.add(new FlyingEnemy(randomColor(),Math.random()*length*.75+400,(Math.random()*500+150),(Math.random()*125+25),Math.random()*.003,Math.random()*30+30));
                 }
                 else
                 {
-                    enemies.add(new Killplane(Color.RED,Math.random()*length,(Math.random()*800),Math.random()*30+30));   
+                    enemies.add(new Killplane(randomColor(),Math.random()*length*.75+400,(Math.random()*800),Math.random()*40+40));   
                 }
             }
+            System.out.println(enemynum+"  enemies");
         }
+    }
+    public Color randomColor()
+    {
+        return new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255));
+        
+        
     }
     public class KeysListener implements KeyListener
     {
