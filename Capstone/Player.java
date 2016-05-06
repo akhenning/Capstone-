@@ -403,14 +403,18 @@ class Player
     }
     
     public void getPowerUp(int identity)
-    {
-        if(identity==2&&identity==powerUpState)
+    {        
+        if(identity==powerUpState)
         {
-            identity=3;
+            identity++;
         }
-        powerUpState=identity;
-        yradius=30+(10*powerUpState);
-        xradius=baseRadius;
+        if(powerUpState<identity)
+        {
+            powerUpState=identity;
+            yradius=30+(10*powerUpState);
+            xradius=baseRadius;
+        }
+        
     }
     public void takeDamage(int type)
     {

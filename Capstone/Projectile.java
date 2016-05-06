@@ -48,7 +48,7 @@ public class Projectile extends Entity
             }
             setX(staticX-Player.scrollX);
             staticX+=movementSpeed;            
-        }
+        }        
         if(getY()>1000)
         {
             setAlive(false);

@@ -309,7 +309,7 @@ public class DrawingPanel extends JPanel
             
             enemies.add(new MatedEnemy(Color.GRAY,groundBlocks.get(6),50,.01,5));
             enemies.add(new MatedEnemy(Color.RED,groundBlocks.get(3),50,.02,5));
-            enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.01,40));
+            enemies.add(new FlyingEnemy(Color.BLUE, 2500, 400,300,.002,40));
             enemies.add(new Killplane(Color.RED,1300,600,50));
             enemies.add(lv1);            
         }
@@ -388,10 +388,10 @@ public class DrawingPanel extends JPanel
                 int type=(int)(Math.random()*7);
                 if(type==0)
                 {
-                    if(alreadyhasItem)
+                    if(alreadyhasItem==false)
                     {
                         alreadyhasItem=true;
-                        Powerup lv1=new Powerup(Color.GREEN,500,350,(int)Math.random()*2);
+                        Powerup lv1=new Powerup(Color.GREEN,500,350,(int)Math.random()*2+1);
                         groundBlocks.add(new BoxWithItem(new Point2D.Double(Math.random()*length/2,Math.random()*250+100),50,Color.RED,lv1));
                         enemies.add(lv1);
                     }
@@ -403,11 +403,11 @@ public class DrawingPanel extends JPanel
                 }
                 else if (type<5)//vertical platfrom
                 {
-                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length,(int)(Math.random()*3)*400),Math.random()*40+50,Math.random()*300,randomColor()));
+                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length,(int)(Math.random()*3)*400),Math.random()*40+50,Math.random()*200+100,randomColor()));
                 }
                 if (type>4)
                 {
-                     groundBlocks.add(new SquareObj(new Point2D.Double(Math.random()*length,Math.random()*300+300),Math.random()*75+25,randomColor()));
+                     groundBlocks.add(new SquareObj(new Point2D.Double(Math.random()*length,Math.random()*300+300),Math.random()*75+35,randomColor()));
                 }
             }
             int enemynum=(int)(Math.random()*4)+1;
@@ -422,7 +422,7 @@ public class DrawingPanel extends JPanel
                 }
                 else if (type<6)
                 {
-                    enemies.add(new FlyingEnemy(randomColor(),Math.random()*length*.75+400,(Math.random()*500+150),(Math.random()*125+25),Math.random()*.003,Math.random()*30+30));
+                    enemies.add(new FlyingEnemy(randomColor(),Math.random()*length*.75+400,(Math.random()*500+150),(Math.random()*125+75),Math.random()*.004+.001,Math.random()*30+30));
                 }
                 else
                 {

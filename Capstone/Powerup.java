@@ -13,6 +13,7 @@ class Powerup extends Entity
     double staticY;
     int type;
     double grow=0;
+    int exploding=-1;
     public Powerup(Color color, double staticX, double staticY,int type)
     {
         super(color,50);
@@ -32,7 +33,18 @@ class Powerup extends Entity
     {   
         if(isAlive())
         {
-            if(type==1)
+            if(exploding>0)
+            {
+                exploding+=2;
+                Ellipse2D.Double ell=new Ellipse2D.Double(getX()-exploding,getY()-exploding,exploding*2,exploding*2);                
+                g2.setColor(Color.RED); 
+                g2.draw(ell);                
+                if(exploding>100)
+                {
+                    setAlive(false);
+                }
+            }
+            else if(type==1)
             {
                 if (grow>-100)
                 {
@@ -91,9 +103,11 @@ class Powerup extends Entity
     }                 
     
     public void getHit(Player player, boolean x)
-    {        
-        player.getPowerUp(type);
-        setAlive(false);
+    {      
+        if(exploding==-1)
+        {   
+            player.getPowerUp(type);        
+            exploding=1;}
     }
     
     public int interactionType()
