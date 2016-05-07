@@ -160,7 +160,7 @@ public class DrawingPanel extends JPanel
         for (Shape shape:groundBlocks)
         {            
             position=shape.getStaticX()-player.scrollX;
-            if (position+shape.getXL()>-20&&position-shape.getXL()<1220)
+            if (position+shape.getXL()>-300&&position-shape.getXL()<1220)
             {
                 shape.goToX(position);
                 shape.draw(g2);
@@ -299,7 +299,7 @@ public class DrawingPanel extends JPanel
             groundBlocks.add(new RectObj(new Point2D.Double(400,625),400,25,Color.BLACK));
             groundBlocks.add(new SquareObj(new Point2D.Double(400,250),50,Color.BLACK));
             
-            Powerup lv1=new Powerup(Color.GREEN,500,350,3);
+            Powerup lv1=new Powerup(Color.GREEN,500,350,1);
             groundBlocks.add(new BoxWithItem(new Point2D.Double(500,350),50,Color.RED,lv1));
             
             groundBlocks.add(new SquareObj(new Point2D.Double(1100,625),50,Color.BLUE));
@@ -364,7 +364,7 @@ public class DrawingPanel extends JPanel
             //This will be a random one in theory
             int length=(int)(Math.random()*1500)+1500;
             finish=new RectObj(new Point2D.Double(length,100),50,1000,Color.BLACK);
-            int platforms=(int)(Math.random()*3);
+            int platforms=(int)(Math.random()*4);
             if(platforms==0)
             {
                 groundBlocks.add(new RectObj(new Point2D.Double(length/2,650+Math.random()*150),length,75,Color.BLACK));
@@ -380,7 +380,12 @@ public class DrawingPanel extends JPanel
                 groundBlocks.add(new RectObj(new Point2D.Double(length/4,650+Math.random()*150),length/4-200,75,Color.BLACK));
                 enemies.add(new FlyingEnemy(Color.ORANGE,length/2,(Math.random()*800),(Math.random()*125+125),.001,Math.random()*30+30));
             }
-            System.out.println(platforms);
+            else if (platforms==3)
+            {
+                groundBlocks.add(new RectObj(new Point2D.Double(100,650+Math.random()*150),400,75,Color.BLACK));
+                groundBlocks.add(new RectObj(new Point2D.Double(length-350,650+Math.random()*150),400,75,Color.BLACK));
+                groundBlocks.add(new RectObj(new Point2D.Double(length/2,650+Math.random()*150),400,75,Color.BLACK));
+            }            
             int platformnum=(int)(Math.random()*4)+3;      
             boolean alreadyhasItem=false;
             for (int i=0;i<platformnum;i++)
@@ -391,23 +396,23 @@ public class DrawingPanel extends JPanel
                     if(alreadyhasItem==false)
                     {
                         alreadyhasItem=true;
-                        Powerup lv1=new Powerup(Color.GREEN,500,350,(int)Math.random()*2+1);
-                        groundBlocks.add(new BoxWithItem(new Point2D.Double(Math.random()*length/2,Math.random()*250+100),50,Color.RED,lv1));
+                        Powerup lv1=new Powerup(Color.GREEN,500,350,(int)(Math.random()*2)+1);
+                        groundBlocks.add(new BoxWithItem(new Point2D.Double(Math.random()*length*.75,Math.random()*250+100),50,Color.RED,lv1));
                         enemies.add(lv1);
                     }
                     else{ type=6;}
                 }
                 else if (type<4)//horizontal platform
                 {
-                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length*.75,Math.random()*300+300),Math.random()*250+100,Math.random()*20+20,randomColor()));
+                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*(length-500)+500,Math.random()*300+300),Math.random()*250+100,Math.random()*20+20,randomColor()));
                 }
                 else if (type<5)//vertical platfrom
                 {
-                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*length,(int)(Math.random()*3)*400),Math.random()*40+50,Math.random()*200+100,randomColor()));
+                     groundBlocks.add(new RectObj(new Point2D.Double(Math.random()*(length-500)+500,(int)(Math.random()*3)*400),Math.random()*40+50,Math.random()*200+100,randomColor()));
                 }
                 if (type>4)
                 {
-                     groundBlocks.add(new SquareObj(new Point2D.Double(Math.random()*length,Math.random()*300+300),Math.random()*75+35,randomColor()));
+                     groundBlocks.add(new SquareObj(new Point2D.Double(Math.random()*(length-500)+500,Math.random()*300+300),Math.random()*75+35,randomColor()));
                 }
             }
             int enemynum=(int)(Math.random()*4)+1;
@@ -418,25 +423,23 @@ public class DrawingPanel extends JPanel
                 int type=(int)(Math.random()*7);
                 if (type<3)
                 {
-                     enemies.add(new MatedEnemy(randomColor(),groundBlocks.get((int)(Math.random()*groundBlocks.size())),Math.random()*30+30,Math.random()*.002+.003,Math.random()*10));
+                     enemies.add(new MatedEnemy(randomColor(),groundBlocks.get((int)(Math.random()*(groundBlocks.size()-1)+1)),Math.random()*30+30,Math.random()*.002+.003,Math.random()*10));
                 }
                 else if (type<6)
                 {
-                    enemies.add(new FlyingEnemy(randomColor(),Math.random()*length*.75+400,(Math.random()*500+150),(Math.random()*125+75),Math.random()*.004+.001,Math.random()*30+30));
+                    enemies.add(new FlyingEnemy(randomColor(),Math.random()*length*.75+500,(Math.random()*500+150),(Math.random()*125+75),Math.random()*.004+.001,Math.random()*30+30));
                 }
                 else
                 {
-                    enemies.add(new Killplane(randomColor(),Math.random()*length*.75+400,(Math.random()*800),Math.random()*40+40));   
+                    enemies.add(new Killplane(Color.RED,Math.random()*length*.75+500,(Math.random()*800),Math.random()*40+40));   
                 }
-            }
-            System.out.println(enemynum+"  enemies");
+            }            
         }
     }
     public Color randomColor()
     {
         return new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255));
-        
-        
+                
     }
     public class KeysListener implements KeyListener
     {
@@ -499,8 +502,7 @@ public class DrawingPanel extends JPanel
             else if (e.getKeyCode()==KeyEvent.VK_S)
             {
                  isCrouching=false;
-            }   
-            
+            }               
         }
         public void keyTyped(KeyEvent e)
         {

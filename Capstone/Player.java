@@ -113,9 +113,7 @@ class Player
     }    
     public void moveX(double direction,boolean shift, boolean crouch)
     {        
-       // System.out.println(crouching);
-        
-        
+             
         if (crouch)        
         {        
             if (crouching==false)
@@ -124,13 +122,11 @@ class Player
                 yradius/=2;
                 move(0,yradius);
             }     
-            if (touching)
-            {
-                xVelocity*=.95;
-                if (xVelocity<4)
-                {
-                    xVelocity=0;
-                }
+            xVelocity+=direction/4;            
+            if (xVelocity>2||xVelocity<-2)
+            {            
+                xVelocity*=.9;
+                //xVelocity/=10;
             }
         }
         else
@@ -213,18 +209,15 @@ class Player
                 vulnerable=true;
             }
         }
-        if(powerUpState==0)
-        {
-            color=Color.GREEN;
-        }
-        else if(powerUpState==1)
-        {
-            color=new Color(255,150,0);
-        }
-        else if(powerUpState==2)
-        {
-            color=Color.RED;
-        }
+        switch(powerUpState) {
+            case 0: color=Color.GREEN;
+            break;
+            case 1: color=new Color(255,150,0);
+            break;
+            case 2: color=Color.RED;
+            break;
+            case 3: color=Color.BLUE;
+        }        
         rect=new Rectangle((int)(center.getX()-xradius),(int)(center.getY()-yradius),(int)xradius*2,(int)yradius*2);
                
         Rectangle rect2;
