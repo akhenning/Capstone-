@@ -57,7 +57,7 @@ public class Projectile extends Entity
         {
             setAlive(false);
         }
-        else if(getY()<0)
+        else if(getY()<-400)
         {
             setAlive(false);
         }

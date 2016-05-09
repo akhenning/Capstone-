@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 class Player
 {
@@ -26,6 +28,9 @@ class Player
     boolean vulnerable=true;
     double vulnerabilityTimer=0;
     boolean ded=false;//ded==dead
+    double sanic=1;
+    Image image=Toolkit.getDefaultToolkit().getImage("naturally.png");
+    
     public Player(Point2D.Double center, double radius)
     {
         this.center=center;
@@ -56,8 +61,10 @@ class Player
             {                  
                 upVelocity-=.75;        
             }            
-            scrollX+=xVelocity;            
-            xVelocity*=.95;                       
+            scrollX+=xVelocity;  
+            if(sanic==1)
+            {xVelocity*=.95;   } 
+            
             if (center.getY()>900)
             {
                 takeDamage(3);
@@ -76,8 +83,11 @@ class Player
             {                  
                 upVelocity-=.75;        
             }            
-            scrollX+=xVelocity;            
-            xVelocity*=.95;                       
+            scrollX+=xVelocity;       
+            
+            if(sanic==1)
+            {xVelocity*=.95;}  
+           
             if (center.getY()>900)
             {
                 takeDamage(3);
@@ -88,11 +98,7 @@ class Player
             scrolling=false;
             if (center.getX()<xradius)
             {
-                xVelocity=.25;
-                if(center.getX()<-20)
-                {   
-                    goTo(20, center.getY());
-                }
+                xVelocity=.25;                
             }
             move(xVelocity,-1*upVelocity);
             if (upVelocity<-2||space)
@@ -103,7 +109,9 @@ class Player
             {                  
                 upVelocity-=.75;        
             }
-            xVelocity*=.95;            
+            if(sanic==1)
+            {xVelocity*=.95;     }
+            
             if (center.getY()>900)
             {
                 takeDamage(3);
@@ -162,16 +170,16 @@ class Player
         {
             if (xVelocity>20)
             {
-                upVelocity=22+Math.abs(xVelocity%20/4);
+                upVelocity=22+Math.abs(xVelocity%20/4)*sanic;
             }
             else
             {
-                upVelocity=12+Math.abs(xVelocity/2);
+                upVelocity=12+Math.abs(xVelocity/2)*sanic;
             }
         }
         else if (powerUpState>=2)
         {
-            upVelocity=1;
+            upVelocity=-1;
         }
         touching=false;
     }    
@@ -179,7 +187,7 @@ class Player
     {
         switch (behavior) {
             case 0: 
-                upVelocity=20;       
+                upVelocity=20*sanic;       
                 touching=false;
                 break;
             case 1:
@@ -209,73 +217,80 @@ class Player
                 vulnerable=true;
             }
         }
-        switch(powerUpState) {
-            case 0: color=Color.GREEN;
-            break;
-            case 1: color=new Color(255,150,0);
-            break;
-            case 2: color=Color.RED;
-            break;
-            case 3: color=Color.BLUE;
-        }        
-        rect=new Rectangle((int)(center.getX()-xradius),(int)(center.getY()-yradius),(int)xradius*2,(int)yradius*2);
-               
-        Rectangle rect2;
-        Rectangle rect3;
-        g2.setColor(color);    
-        if(vulnerabilityTimer%2==0)
+        if(powerUpState>=5)
         {
-            g2.fill(rect);
+            g2.drawImage(image,(int)(center.getX()-xradius),(int)(center.getY()-yradius),(int)yradius*2,(int)yradius*2,null);
+           
         }
         else
-        {
-            g2.draw(rect);
-        }
-        
-        Rectangle rect4=new Rectangle((int)(center.getX()-(xradius*2/3)),(int)(center.getY()-(yradius/2)),(int)xradius/4,(int)yradius/4);
-        Rectangle rect5=new Rectangle((int)(center.getX()+(xradius/3)),(int)(center.getY()-(yradius/2)),(int)xradius/4,(int)yradius/4);
-        
-        if(!vulnerable)
-        {
-            Rectangle rect6=new Rectangle((int)(center.getX()-(xradius/2)),(int)(center.getY()+(yradius/2)),(int)xradius*2/3,(int)yradius/4);
-            Line2D.Double l2=new Line2D.Double((center.getX()-(xradius*3/4)),(center.getY()-(yradius*1/5)),center.getX()-xradius/5,center.getY());
-            Line2D.Double l3=new Line2D.Double(center.getX()+xradius*4/5,(center.getY()-(yradius*1/5)),(center.getX()+(xradius/4)),center.getY());
-        
-            g2.setColor(Color.BLACK);
-            g2.fill(rect6);
-            g2.draw(l2);
-            g2.draw(l3);
-        }        
-        else if(touching&&upVelocity>-3)
-        {
-            Rectangle rect6=new Rectangle((int)(center.getX()-(xradius/2)),(int)(center.getY()+(yradius/2)),(int)xradius*2/3,(int)yradius/4);
+            {
+            switch(powerUpState) {
+                case 0: color=Color.GREEN;
+                break;
+                case 1: color=new Color(255,150,0);
+                break;
+                case 2: color=Color.RED;
+                break;
+                case 3: color=Color.BLUE;
+            }        
+            rect=new Rectangle((int)(center.getX()-xradius),(int)(center.getY()-yradius),(int)xradius*2,(int)yradius*2);
+                   
+            Rectangle rect2;
+            Rectangle rect3;
+            g2.setColor(color);    
+            if(vulnerabilityTimer%2==0)
+            {
+                g2.fill(rect);
+            }
+            else
+            {
+                g2.draw(rect);
+            }
             
-            rect2=new Rectangle((int)(center.getX()-(xradius*2/3)),(int)(center.getY()-(yradius/2)),(int)xradius/2,(int)yradius/2);
-            rect3=new Rectangle((int)(center.getX()+(xradius/3)),(int)(center.getY()-(yradius/2)),(int)xradius/2,(int)yradius/2);
-            g2.setColor(Color.WHITE);  
-            g2.fill(rect2);
-            g2.fill(rect3);
-            g2.setColor(Color.BLACK);
-            g2.fill(rect6);
-            g2.fill(rect4);
-            g2.fill(rect5);
-        }
-        else
-        {
-            Ellipse2D.Double rect6=new Ellipse2D.Double((int)(center.getX()-(xradius*2/3)),(int)(center.getY()+(yradius/4)),(int)xradius,(int)yradius/2);
-            g2.fill(rect6);
-            rect2=new Rectangle((int)(center.getX()-(xradius*3/4)),(int)(center.getY()-(yradius*3/5)),(int)xradius*3/5,(int)yradius*3/5);
-            rect3=new Rectangle((int)(center.getX()+(xradius/4)),(int)(center.getY()-(yradius*3/5)),(int)xradius*3/5,(int)yradius*3/5);
-            g2.setColor(Color.WHITE);  
-            g2.fill(rect2);
-            g2.fill(rect3);
-            g2.setColor(Color.BLACK);
-            g2.fill(rect6);
-            g2.fill(rect4);
-            g2.fill(rect5);
-        }
+            Rectangle rect4=new Rectangle((int)(center.getX()-(xradius*2/3)),(int)(center.getY()-(yradius/2)),(int)xradius/4,(int)yradius/4);
+            Rectangle rect5=new Rectangle((int)(center.getX()+(xradius/3)),(int)(center.getY()-(yradius/2)),(int)xradius/4,(int)yradius/4);
+            
+            if(!vulnerable)
+            {
+                Rectangle rect6=new Rectangle((int)(center.getX()-(xradius/2)),(int)(center.getY()+(yradius/2)),(int)xradius*2/3,(int)yradius/4);
+                Line2D.Double l2=new Line2D.Double((center.getX()-(xradius*3/4)),(center.getY()-(yradius*1/5)),center.getX()-xradius/5,center.getY());
+                Line2D.Double l3=new Line2D.Double(center.getX()+xradius*4/5,(center.getY()-(yradius*1/5)),(center.getX()+(xradius/4)),center.getY());
+            
+                g2.setColor(Color.BLACK);
+                g2.fill(rect6);
+                g2.draw(l2);
+                g2.draw(l3);
+            }        
+            else if(touching&&upVelocity>-3)
+            {
+                Rectangle rect6=new Rectangle((int)(center.getX()-(xradius/2)),(int)(center.getY()+(yradius/2)),(int)xradius*2/3,(int)yradius/4);
+                
+                rect2=new Rectangle((int)(center.getX()-(xradius*2/3)),(int)(center.getY()-(yradius/2)),(int)xradius/2,(int)yradius/2);
+                rect3=new Rectangle((int)(center.getX()+(xradius/3)),(int)(center.getY()-(yradius/2)),(int)xradius/2,(int)yradius/2);
+                g2.setColor(Color.WHITE);  
+                g2.fill(rect2);
+                g2.fill(rect3);
+                g2.setColor(Color.BLACK);
+                g2.fill(rect6);
+                g2.fill(rect4);
+                g2.fill(rect5);
+            }
+            else
+            {
+                Ellipse2D.Double rect6=new Ellipse2D.Double((int)(center.getX()-(xradius*2/3)),(int)(center.getY()+(yradius/4)),(int)xradius,(int)yradius/2);
+                g2.fill(rect6);
+                rect2=new Rectangle((int)(center.getX()-(xradius*3/4)),(int)(center.getY()-(yradius*3/5)),(int)xradius*3/5,(int)yradius*3/5);
+                rect3=new Rectangle((int)(center.getX()+(xradius/4)),(int)(center.getY()-(yradius*3/5)),(int)xradius*3/5,(int)yradius*3/5);
+                g2.setColor(Color.WHITE);  
+                g2.fill(rect2);
+                g2.fill(rect3);
+                g2.setColor(Color.BLACK);
+                g2.fill(rect6);
+                g2.fill(rect4);
+                g2.fill(rect5);
+            }
         
-        
+        }
     }
     public void stop()
     {
@@ -407,10 +422,18 @@ class Player
             yradius=30+(10*powerUpState);
             xradius=baseRadius;
         }
+        if(identity==2&&identity==powerUpState-1)
+        {
+            powerUpState=12;
+            sanic=10;
+            yradius=30+(10*powerUpState);
+            xradius=baseRadius;
+        }
+        
         
     }
     public void takeDamage(int type)
-    {
+    {       
         if(vulnerable)
         {            
             if(type==0||type==1)

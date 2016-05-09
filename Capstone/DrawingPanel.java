@@ -34,6 +34,7 @@ public class DrawingPanel extends JPanel
         
     public DrawingPanel()
     {        
+        System.out.println("Controls:\nAD= Left, Right\nS=Crouch\nSpace=Jump/Air Flutter\nShift=Run, Shoot Projectile");
         groundBlocks=new ArrayList<Shape>();
         enemies=new ArrayList<Entity>();
         projectiles=new ArrayList<Projectile>();

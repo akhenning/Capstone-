@@ -30,7 +30,7 @@ class FlyingEnemy extends Entity
         finRadius=radius;
         if (this.flightSpeed>0)
         {
-            image=Toolkit.getDefaultToolkit().getImage("naturally.png");
+            image=Toolkit.getDefaultToolkit().getImage("flying.png");
         }
     }
     public void calcXY()
@@ -54,6 +54,9 @@ class FlyingEnemy extends Entity
         //calcXY(scrollX);        
         if(flightSpeed>0)
         {
+            rect=new Rectangle((int)(getX()-getRadius()),(int)(getY()-getRadius()),(int)getRadius()*2,(int)getRadius()*2);
+            g2.setColor(color);
+            g2.fill(rect);
             g2.drawImage(image,(int)(getX()-getRadius()),(int)(getY()-getRadius()),(int)getRadius()*2,(int)getRadius()*2,null);
             
         }
