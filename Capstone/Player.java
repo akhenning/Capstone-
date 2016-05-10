@@ -179,7 +179,7 @@ class Player
         }
         else if (powerUpState>=2)
         {
-            upVelocity=-1;
+            upVelocity=1;
         }
         touching=false;
     }    

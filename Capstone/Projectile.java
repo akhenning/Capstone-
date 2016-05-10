@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 public class Projectile extends Entity
 {          
@@ -11,6 +13,7 @@ public class Projectile extends Entity
     double special;
     double upV=0;
     double movementSpeed;
+    Image img;
     public Projectile(Player player, int powerlevel,double special)
     {
         super(Color.RED,10+(powerlevel*10));
@@ -20,7 +23,13 @@ public class Projectile extends Entity
         if(powerlevel<3)
         {
             upV=(player.getUpV()/2)+10;
+           
+            //System.out.println(img);
         }              
+        if (powerlevel>2)
+        {
+             img=Toolkit.getDefaultToolkit().getImage("fire.png");
+        }
         color=Color.RED;     
         type=powerlevel;
         movementSpeed=player.getXV()+2+(powerlevel*powerlevel);
@@ -67,17 +76,18 @@ public class Projectile extends Entity
     public void draw(Graphics2D g2)
     {
         //calcXY(scrollX);        
-        Ellipse2D.Double ell2=new Ellipse2D.Double(getX()-(getRadius()/2),getY()-getRadius()/2,getRadius(),getRadius());
-        
-       g2.setColor(Color.RED);  
-       g2.fill(ell2);  
        
-       if(type>1)
+       
+       if(type>2)
        {
-           Ellipse2D.Double ell=new Ellipse2D.Double(getX()-(getRadius()/3),getY()-getRadius()/3,getRadius()*2/3,getRadius()*2/3);
-           g2.setColor(Color.BLUE);
-           g2.fill(ell);
+           g2.drawImage(img,(int)(getX()-(getRadius())),(int)(getY()-getRadius()),(int)(getRadius()*2),(int)(getRadius()*1.4),null);
        }
+       else
+       {
+            Ellipse2D.Double ell2=new Ellipse2D.Double(getX()-(getRadius()/2),getY()-getRadius()/2,getRadius(),getRadius());
+            g2.setColor(Color.RED);  
+            g2.fill(ell2);  
+        }
         
     }
     

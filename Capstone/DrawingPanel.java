@@ -59,11 +59,17 @@ public class DrawingPanel extends JPanel
         return d;
     }
     
+    /**
+     * Handles the 'ending level' animation.
+     *
+     * @pre     Player is touching the finish line.
+     * @post    plays the animation and calls nextLevel()
+       */
     public void finishLevel()
     {           
         
         try {
-            Thread.sleep(30);                 //I took this bit here from stackoverflow - just the pause
+            Thread.sleep(30);                 //I took this bit here from stackoverflow - just the pause stuff
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
@@ -73,7 +79,7 @@ public class DrawingPanel extends JPanel
             player.changeRadius(20);
             repaint();
             try {
-                Thread.sleep(30);                 
+                Thread.sleep(30);                 //same
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -97,6 +103,13 @@ public class DrawingPanel extends JPanel
         
     }
            
+        /**
+     * An example of a method - replace this comment with your own
+     *  that describes the operation of the method
+     *   
+     * @post    draws all the onscreen objects and calculates new locations
+     * @param  g Graphics object
+     */
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
@@ -178,6 +191,13 @@ public class DrawingPanel extends JPanel
         player.draw(g2);
         
     }
+    
+    /**
+     * Is called every frame to calculate collision and player interactions
+     *
+     
+     * @post    had detected and acted upon any collisions and stuff
+     */
     public void nextFrame()
     {
         if (player.isHitNextFrame(finish))
@@ -257,6 +277,13 @@ public class DrawingPanel extends JPanel
             
         }
     }
+    
+        /**
+     * Handles the pulsation of the player.
+     *
+     * 
+     * @post    slightly changes player radius.
+     */
     public void lol()
     {
         if(!isCrouching)
@@ -288,6 +315,13 @@ public class DrawingPanel extends JPanel
         //}
          
     }
+    
+    /**
+     * Loads a level.
+     *
+     * @post    all the objects in a level have been initalized to their proper places.
+     * @param   which    which type of level should be loaded
+     */
     public void loadLevel(int which)
     {
         groundBlocks=new ArrayList<Shape>();
@@ -450,7 +484,8 @@ public class DrawingPanel extends JPanel
             
             if (e.getKeyCode()==KeyEvent.VK_SPACE)
             {
-                player.jump();
+                if(isJumping==false)
+                {player.jump();}
                 
                 isJumping=true;
             }
